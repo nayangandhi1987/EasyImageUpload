@@ -33,6 +33,9 @@ public class MainActivity extends Activity {
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;
 	
+	static final String JUNGLEE_SERVER = "http://192.168.1.3:8888";
+	static final String UPLOAD_ACTION = "upload";
+	
 	private String fileNameTemplate = "junglee_cam_picture_<time-stamp>";
 	private String fileName = null;
 	private Uri imageUri = null;
@@ -238,7 +241,7 @@ public class MainActivity extends Activity {
     		    public void run()
     		    {
     		    	AsyncHttpClientFileUploader fileUploader = new AsyncHttpClientFileUploader();
-    	    		fileUploader.uploadFile("http://192.168.1.3:8888/upload", new File(fileToUpload));
+    	    		fileUploader.uploadFile(String.format("%s/%s", JUNGLEE_SERVER, UPLOAD_ACTION), new File(fileToUpload));
 
     		    }
     		};

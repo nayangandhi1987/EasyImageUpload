@@ -52,8 +52,8 @@ public class ImgCompressionUtility {
         options.inJustDecodeBounds = true;
         Bitmap bmp = BitmapFactory.decodeFile(filepath, options);
  
-        int actualHeight = options.outHeight;
-        int actualWidth = options.outWidth;
+        int requiredWidth = options.outHeight, actualHeight = options.outHeight;
+        int requiredHeight = options.outWidth, actualWidth = options.outWidth;
  
 //      max Height and width values of the compressed image is taken as 816x612
  
@@ -67,22 +67,22 @@ public class ImgCompressionUtility {
         if (actualHeight > maxHeight || actualWidth > maxWidth) {
             if (imgRatio < maxRatio) {               
             	imgRatio = maxHeight / actualHeight;                
-            	actualWidth = (int) (imgRatio * actualWidth);               
-            	actualHeight = (int) maxHeight;             
+            	requiredWidth = (int) (imgRatio * actualWidth);               
+            	requiredHeight = (int) maxHeight;             
             } else if (imgRatio > maxRatio) {
                 imgRatio = maxWidth / actualWidth;
-                actualHeight = (int) (imgRatio * actualHeight);
-                actualWidth = (int) maxWidth;
+                requiredHeight = (int) (imgRatio * actualHeight);
+                requiredWidth = (int) maxWidth;
             } else {
-                actualHeight = (int) maxHeight;
-                actualWidth = (int) maxWidth;
+            	requiredHeight = (int) maxHeight;
+            	requiredWidth = (int) maxWidth;
  
             }
         }
  
 //      setting inSampleSize value allows to load a scaled down version of the original image
  
-        options.inSampleSize = calculateInSampleSize(actualWidth, actualHeight, actualWidth, actualHeight);
+        options.inSampleSize = calculateInSampleSize(actualWidth, actualHeight, requiredWidth, requiredHeight);
  
 //      inJustDecodeBounds set to false to load the actual bitmap
         options.inJustDecodeBounds = false;
@@ -100,15 +100,15 @@ public class ImgCompressionUtility {
  
         }
         try {
-            scaledBitmap = Bitmap.createBitmap(actualWidth, actualHeight, Bitmap.Config.ARGB_8888);
+            scaledBitmap = Bitmap.createBitmap(requiredWidth, requiredHeight, Bitmap.Config.ARGB_8888);
         } catch (OutOfMemoryError exception) {
             exception.printStackTrace();
         }
  
-        float ratioX = actualWidth / (float) options.outWidth;
-        float ratioY = actualHeight / (float) options.outHeight;
-        float middleX = actualWidth / 2.0f;
-        float middleY = actualHeight / 2.0f;
+        float ratioX = requiredWidth / (float) actualWidth;
+        float ratioY = requiredHeight / (float) actualHeight;
+        float middleX = requiredWidth / 2.0f;
+        float middleY = requiredHeight / 2.0f;
  
         Matrix scaleMatrix = new Matrix();
         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
