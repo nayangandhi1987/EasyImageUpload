@@ -1,0 +1,78 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".ImgUploadActivity"
+    android:orientation="vertical" >
+        
+
+    <TextView
+        android:id="@+id/choose_img_heading"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_marginBottom="4dp"
+        android:text="@string/choose_to_upload" />
+    
+    <ImageView
+        android:id="@+id/img_to_upload"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/no_photo"
+        android:layout_weight="1" />
+
+        
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal" >
+        
+    <RadioGroup
+        android:id="@+id/radio_quality"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_weight="1" >
+ 
+     	<RadioButton
+         	android:id="@+id/radio_high"
+         	android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+    	    android:text="@string/high" 
+        	android:checked="true" />
+		<RadioButton
+    	    android:id="@+id/radio_medium"
+        	android:layout_width="wrap_content"
+         	android:layout_height="wrap_content"
+         	android:text="@string/medium" 
+         	android:checked="false" />
+		<RadioButton
+         	android:id="@+id/radio_low"
+         	android:layout_width="wrap_content"
+         	android:layout_height="wrap_content"
+         	android:text="@string/low" 
+         	android:checked="false" />
+ 
+    </RadioGroup>
+    
+    <TextView
+        android:id="@+id/file_size"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center" />
+    
+    </LinearLayout>
+    
+    <Button
+        android:id="@+id/btn_upload"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Upload" />
+
+</LinearLayout>
