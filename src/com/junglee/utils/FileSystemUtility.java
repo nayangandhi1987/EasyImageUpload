@@ -10,6 +10,11 @@ import java.io.OutputStream;
 import android.util.Log;
 
 public class FileSystemUtility {
+	
+	private static final int KB = 1024;
+	private static final int MB = 1024 * 1024;
+	private static final int GB = 1024 * 1024 *1024;
+	
 	public static String extractFilenameWithExtn(String filepath) {
 		return extractFilename(filepath, true);
 	}
@@ -57,4 +62,25 @@ public class FileSystemUtility {
         out.close();
         Log.i("JungleeClick", "Copied To => " + fileDst);
     }
+	
+	public static String getFileSizeAsString(long size) {
+		String sizeAsString = null;
+		
+		float gb_s = 0, mb_s = 0, kb_s = 0, bytes = 0;
+		if(size > GB) {
+			gb_s = size / (float)GB;
+			sizeAsString = String.format("%.2f GB", gb_s);
+		} else if(size > MB) {
+			mb_s = size / (float)MB;
+			sizeAsString = String.format("%.2f MB", mb_s);
+		} else if(size > KB) {
+			kb_s = size / (float)KB;
+			sizeAsString = String.format("%.2f KB", kb_s);
+		} else {
+			bytes = size;
+			sizeAsString = String.format("%.2f Bytes", bytes);
+		}
+		
+		return sizeAsString;
+	}
 }

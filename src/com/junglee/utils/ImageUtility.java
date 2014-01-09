@@ -25,8 +25,8 @@ public class ImageUtility {
 	private static final int TEMP_STORAGE_SIZE_FOR_COMPRESSION = 16 * 1024;
 	
 	private static final int HIGH_COMPRESSION_QUALITY_VALUE = 100;
-	private static final int MEDIUM_COMPRESSION_QUALITY_VALUE = 80;
-	private static final int LOW_COMPRESSION_QUALITY_VALUE = 60;
+	private static final int MEDIUM_COMPRESSION_QUALITY_VALUE = 60;
+	private static final int LOW_COMPRESSION_QUALITY_VALUE = 20;
 	
 	private static String COMPRESSED_IMG_SUFFIX_TEMPLATE = "reduced_<quality>";
 	

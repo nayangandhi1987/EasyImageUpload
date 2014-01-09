@@ -25,27 +25,41 @@ public final class R {
         public static final int no_photo=0x7f020001;
     }
     public static final class id {
-        public static final int action_settings=0x7f080007;
-        public static final int btn_cam=0x7f080003;
-        public static final int btn_compress=0x7f080005;
-        public static final int btn_gallery=0x7f080004;
-        public static final int btn_loc=0x7f080002;
-        public static final int btn_upload=0x7f080006;
-        public static final int txt_header=0x7f080001;
-        public static final int viewer=0x7f080000;
+        public static final int action_settings=0x7f08000e;
+        public static final int btn_cam=0x7f08000b;
+        public static final int btn_compress=0x7f08000d;
+        public static final int btn_gallery=0x7f08000c;
+        public static final int btn_loc=0x7f08000a;
+        public static final int btn_upload=0x7f080007;
+        public static final int choose_img_heading=0x7f080000;
+        public static final int file_size=0x7f080006;
+        public static final int img_to_upload=0x7f080001;
+        public static final int radio_high=0x7f080003;
+        public static final int radio_low=0x7f080005;
+        public static final int radio_medium=0x7f080004;
+        public static final int radio_quality=0x7f080002;
+        public static final int txt_header=0x7f080009;
+        public static final int viewer=0x7f080008;
     }
     public static final class layout {
-        public static final int activity_imgviewer=0x7f030000;
-        public static final int activity_main=0x7f030001;
-        public static final int main=0x7f030002;
+        public static final int activity_img_upload=0x7f030000;
+        public static final int activity_imgviewer=0x7f030001;
+        public static final int activity_main=0x7f030002;
+        public static final int main=0x7f030003;
     }
     public static final class menu {
-        public static final int main=0x7f070000;
+        public static final int img_upload=0x7f070000;
+        public static final int main=0x7f070001;
     }
     public static final class string {
         public static final int action_settings=0x7f040001;
         public static final int app_name=0x7f040000;
+        public static final int choose_to_upload=0x7f040004;
         public static final int hello_world=0x7f040002;
+        public static final int high=0x7f040005;
+        public static final int low=0x7f040007;
+        public static final int medium=0x7f040006;
+        public static final int title_activity_img_upload=0x7f040003;
     }
     public static final class style {
         /** 

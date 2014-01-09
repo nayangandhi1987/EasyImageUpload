@@ -1,6 +1,10 @@
 package com.junglee.jungleeclick;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map.Entry;
+
+import org.apache.http.entity.mime.content.StringBody;
 
 import com.example.jungleeclick.R;
 import com.junglee.network.AsyncHttpClientFileUploader;
@@ -35,6 +39,7 @@ public class JungleeClickActivity extends Activity {
 	
 	private String fileToUpload = null;
 	private StringBuilder urls = new StringBuilder();
+	private HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
 	
 	private File picture = null;
 
@@ -154,16 +159,19 @@ public class JungleeClickActivity extends Activity {
     			, ImageUtility.CompressionQuality.HIGH);
     	fileToUpload = compressedFilepath;
     	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+    	qualityToImgPath.put("HIGH", compressedFilepath);
     	
     	compressedFilepath = ImageUtility.compressImage(imgSrc
     			, ImageUtility.CompressionQuality.MEDIUM);
     	urls.append("#");
     	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+    	qualityToImgPath.put("MEDIUM", compressedFilepath);
     	
     	compressedFilepath = ImageUtility.compressImage(imgSrc
     			, ImageUtility.CompressionQuality.LOW);
     	urls.append("#");
     	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+    	qualityToImgPath.put("LOW", compressedFilepath);
 
 
     	AlertDialog.Builder builder = new AlertDialog.Builder(JungleeClickActivity.this);
@@ -171,7 +179,8 @@ public class JungleeClickActivity extends Activity {
     	.setCancelable(true)
     	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
     		public void onClick(DialogInterface dialog, int id) {
-    			showCompressedImgs();
+    			//showCompressedImgs();
+    			showUploadScreen();
     		}
     	})
     	.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -186,6 +195,16 @@ public class JungleeClickActivity extends Activity {
     private void showCompressedImgs() {
     	Intent i = new Intent(getApplicationContext(), ImgViewerActivity.class);
     	i.putExtra("urls",urls.toString());
+    	startActivity(i);
+    }
+    private void showUploadScreen() {
+    	Intent i = new Intent(getApplicationContext(), ImgUploadActivity.class);
+    	for (Entry<String, String> entry : qualityToImgPath.entrySet()) {
+            String key = entry.getKey();
+            String value = entry.getValue();
+            i.putExtra(key, value);
+        }
+    	
     	startActivity(i);
     }
     
@@ -212,6 +231,7 @@ public class JungleeClickActivity extends Activity {
 		super.onActivityResult(requestCode, resultCode, data);
 
 		urls.setLength(0);
+		qualityToImgPath.clear();
 		fileToUpload = null;
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE 
 				|| requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
