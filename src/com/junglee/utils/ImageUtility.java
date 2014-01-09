@@ -75,37 +75,29 @@ public class ImageUtility {
         options.inJustDecodeBounds = true;
         Bitmap bmp = BitmapFactory.decodeFile(filepath, options);
  
-        int requiredWidth = options.outHeight, actualHeight = options.outHeight;
-        int requiredHeight = options.outWidth, actualWidth = options.outWidth;
- 
-//      max Height and width values of the compressed image is taken as 816x612
- 
-        float maxHeight = 816.0f;
-        float maxWidth = 612.0f;
-        float imgRatio = actualWidth / actualHeight;
-        float maxRatio = maxWidth / maxHeight;
- 
-//      width and height values are set maintaining the aspect ratio of the image
- 
-        if (actualHeight > maxHeight || actualWidth > maxWidth) {
-            if (imgRatio < maxRatio) {               
-            	imgRatio = maxHeight / actualHeight;                
-            	requiredWidth = (int) (imgRatio * actualWidth);               
-            	requiredHeight = (int) maxHeight;             
-            } else if (imgRatio > maxRatio) {
-                imgRatio = maxWidth / actualWidth;
-                requiredHeight = (int) (imgRatio * actualHeight);
-                requiredWidth = (int) maxWidth;
-            } else {
-            	requiredHeight = (int) maxHeight;
-            	requiredWidth = (int) maxWidth;
- 
-            }
-        }
- 
-//      setting inSampleSize value allows to load a scaled down version of the original image
- 
-        options.inSampleSize = calculateInSampleSize(actualWidth, actualHeight, requiredWidth, requiredHeight);
+        int height = options.outHeight;
+		int width = options.outWidth;
+		float maxHeight = 816.0f;
+		float maxWidth = 612.0f;
+		float imgRatio = (float)width / (float)height;
+		float maxRatio = maxWidth / maxHeight;
+
+		if (height > maxHeight || width > maxWidth) {
+			if (imgRatio < maxRatio) {
+				width = (int) (imgRatio * maxHeight);
+				height = (int) maxHeight;
+			} else if (imgRatio > maxRatio) {
+				height = (int) (maxWidth / imgRatio);
+				width = (int) maxWidth;
+			} else {
+				height = (int) maxHeight;
+				width = (int) maxWidth;     
+				
+			}
+		}
+				
+		options.inSampleSize = calculateInSampleSize(options.outWidth, options.outHeight, width, height);
+		Log.i(TAG,  "SampleSize: "+options.inSampleSize);
  
 //      inJustDecodeBounds set to false to load the actual bitmap
         options.inJustDecodeBounds = false;
@@ -123,15 +115,15 @@ public class ImageUtility {
  
         }
         try {
-            scaledBitmap = Bitmap.createBitmap(requiredWidth, requiredHeight, Bitmap.Config.ARGB_8888);
+            scaledBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         } catch (OutOfMemoryError exception) {
             exception.printStackTrace();
         }
  
-        float ratioX = requiredWidth / (float) actualWidth;
-        float ratioY = requiredHeight / (float) actualHeight;
-        float middleX = requiredWidth / 2.0f;
-        float middleY = requiredHeight / 2.0f;
+        float ratioX = width / (float) options.outWidth;
+		float ratioY = height / (float)options.outHeight;
+		float middleX = width / 2.0f;
+		float middleY = height / 2.0f;
  
         Matrix scaleMatrix = new Matrix();
         scaleMatrix.setScale(ratioX, ratioY, middleX, middleY);
