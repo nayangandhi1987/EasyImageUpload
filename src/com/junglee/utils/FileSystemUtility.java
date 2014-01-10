@@ -63,6 +63,19 @@ public class FileSystemUtility {
         Log.i("JungleeClick", "Copied To => " + fileDst);
     }
 	
+	public static void deleteRecursive(File fileOrDirectory) {
+	    if (fileOrDirectory.isDirectory())
+	        for (File child : fileOrDirectory.listFiles())
+	        	deleteRecursive(child);
+
+	    fileOrDirectory.delete();
+	}
+	public static void deleteDirectoryContents(File fileOrDirectory) {
+	    if (fileOrDirectory.isDirectory())
+	        for (File child : fileOrDirectory.listFiles())
+	        	deleteRecursive(child);
+	}
+	
 	public static String getFileSizeAsString(long size) {
 		String sizeAsString = null;
 		

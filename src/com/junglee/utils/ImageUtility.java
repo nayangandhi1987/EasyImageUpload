@@ -30,7 +30,7 @@ public class ImageUtility {
 	
 	private static String COMPRESSED_IMG_SUFFIX_TEMPLATE = "reduced_<quality>";
 	
-	private static String COMPRESSED_IMGS_TARGET_DIR = "JungleeClick/Images";
+	private static String COMPRESSED_IMGS_TARGET_DIR = "JungleeClick/CompressedImages";
 	
 	public enum CompressionQuality {
 		HIGH,
@@ -267,5 +267,12 @@ public class ImageUtility {
 	    }
 	 
 	    return inSampleSize;
+	}
+
+	public static void clearCompressedImages() {
+		File dir = new File(getCompressionTargetDir());
+	    if (dir.exists()) {
+	    	FileSystemUtility.deleteDirectoryContents(dir);
+	    }
 	}
 }

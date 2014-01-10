@@ -109,6 +109,8 @@ public class JungleeClickActivity extends Activity {
     	        }
     	    }
     	};
+    	
+    	ImageUtility.clearCompressedImages();
     }
 
 
@@ -143,6 +145,7 @@ public class JungleeClickActivity extends Activity {
     }
     
     private void onPictureSelected() {
+    	ImageUtility.clearCompressedImages();
     	compressSelectedPicture();
     }
 
