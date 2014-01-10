@@ -11,10 +11,10 @@ import com.example.jungleeclick.R;
 import com.example.jungleeclick.R.layout;
 import com.example.jungleeclick.R.menu;
 import com.junglee.events.GlobalEventID;
+import com.junglee.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.ImageUtility;
-import com.junglee.utils.LocationUtility;
 import com.junglee.utils.UIUtility;
 
 import android.os.Bundle;
@@ -172,7 +172,7 @@ public class ImgUploadActivity extends Activity {
 		    @Override
 		    public void run()
 		    {
-		    	LocationUtility locationTracker = new LocationUtility(ImgUploadActivity.this, false);
+		    	LocationTracker locationTracker = new LocationTracker(ImgUploadActivity.this, false);
 		    	String locationString = locationTracker.getReadableLocation();
 
 		    	Message msgObj = handler.obtainMessage();

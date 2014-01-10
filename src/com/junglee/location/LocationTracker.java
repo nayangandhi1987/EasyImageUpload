@@ -1,4 +1,4 @@
-package com.junglee.utils;
+package com.junglee.location;
 
 import java.io.IOException;
 import java.util.List;
@@ -18,7 +18,7 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
-public class LocationUtility implements LocationListener{
+public class LocationTracker implements LocationListener{
 	private Context context = null;
 	private boolean listenToUpdates = false;
 	 
@@ -47,7 +47,7 @@ public class LocationUtility implements LocationListener{
     // Declaring a Location Manager
     protected LocationManager locationManager;
  
-    public LocationUtility(Context c, boolean listenToUpdates) {
+    public LocationTracker(Context c, boolean listenToUpdates) {
     	this.context = c;
     	this.listenToUpdates = listenToUpdates;
     	
@@ -136,7 +136,7 @@ public class LocationUtility implements LocationListener{
     
     public void stopUsingGPS(){
         if(locationManager != null){
-            locationManager.removeUpdates(LocationUtility.this);
+            locationManager.removeUpdates(LocationTracker.this);
         }       
     }
     

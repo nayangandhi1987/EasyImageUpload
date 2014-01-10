@@ -34,7 +34,6 @@ public class JungleeClickActivity extends Activity {
 	private String fileName = null;
 	private Uri imageUri = null;
 	
-	private String fileToUpload = null;
 	private StringBuilder urls = new StringBuilder();
 	private HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
 	
@@ -173,7 +172,6 @@ public class JungleeClickActivity extends Activity {
 		    	
 		    	String compressedFilepath = ImageUtility.compressImage(imgSrc
 		    			, ImageUtility.CompressionQuality.HIGH);
-		    	fileToUpload = compressedFilepath;
 		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
 		    	qualityToImgPath.put("HIGH", compressedFilepath);
 		    	
@@ -219,7 +217,6 @@ public class JungleeClickActivity extends Activity {
 
 		urls.setLength(0);
 		qualityToImgPath.clear();
-		fileToUpload = null;
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE 
 				|| requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
 			if (resultCode == RESULT_OK) {
