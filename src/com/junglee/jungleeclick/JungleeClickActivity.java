@@ -4,34 +4,31 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import org.apache.http.entity.mime.content.StringBody;
 
 import com.example.jungleeclick.R;
-import com.junglee.network.AsyncHttpClientFileUploader;
+import com.junglee.events.GlobalEventID;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.ImageUtility;
-import com.junglee.utils.LocationUtility;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.Toast;
 
 public class JungleeClickActivity extends Activity {
 	
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
-	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;
-	
-	static final String JUNGLEE_SERVER = "http://192.168.1.3:8888";
-	static final String UPLOAD_ACTION = "upload";	
+	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;	
 	
 	private String fileNameTemplate = "junglee_cam_picture_<time-stamp>";
 	private String fileName = null;
@@ -42,21 +39,17 @@ public class JungleeClickActivity extends Activity {
 	private HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
 	
 	private File picture = null;
+	
+	ProgressDialog progressDlg = null;
+	
+
+	
+	Handler handler = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        
-        Button locBtn = (Button) findViewById(R.id.btn_loc) ;
-        locBtn.setOnClickListener(new Button.OnClickListener() {           
-
-        	  @Override
-        	  public void onClick(View v) 
-        	  {
-        		  showLocation();
-        	  }
-        });
         
         Button camBtn = (Button) findViewById(R.id.btn_cam) ;
         camBtn.setOnClickListener(new Button.OnClickListener() {           
@@ -78,25 +71,45 @@ public class JungleeClickActivity extends Activity {
         	  }
         });
         
-        Button compressBtn = (Button) findViewById(R.id.btn_compress) ;
-        compressBtn.setOnClickListener(new Button.OnClickListener() {           
-
-        	  @Override
-        	  public void onClick(View v) 
-        	  {
-        		  compressRecentPicture();
-        	  }    
-        });
+        progressDlg = new ProgressDialog(this);
+        progressDlg.setMessage("Reducing image size...");
         
-        Button uploadBtn = (Button) findViewById(R.id.btn_upload) ;
-        uploadBtn.setOnClickListener(new Button.OnClickListener() {           
+        handler = new Handler(){
+    	    @Override
+    	    public void handleMessage(Message msg){
 
-        	  @Override
-        	  public void onClick(View v) 
-        	  {
-        		  uploadRecentPicture();
-        	  }    
-        });
+    	        switch(msg.what){
+    	            case GlobalEventID.MESSAGE_COMPRESSION_STARTED:
+    	            	showCompressionProgressIndicator(true);
+
+    	                break;
+    	            case GlobalEventID.MESSAGE_COMPRESSION_COMPLETED:
+    	            	showCompressionProgressIndicator(false);
+    	            	
+    	            	/*
+    	            	AlertDialog.Builder builder = new AlertDialog.Builder(JungleeClickActivity.this);
+    	            	builder.setTitle("Compression completed!").setMessage("Do you want to view the compressed images?")
+    	            	.setCancelable(true)
+    	            	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+    	            		public void onClick(DialogInterface dialog, int id) {
+    	            			//showCompressedImgs();
+    	            			showUploadScreen();
+    	            		}
+    	            	})
+    	            	.setNegativeButton("No", new DialogInterface.OnClickListener() {
+    	            		public void onClick(DialogInterface dialog, int id) {
+    	            			dialog.dismiss();
+    	            		}
+    	            	});
+    	            	AlertDialog alert = builder.create();
+    	            	alert.show();
+    	            	*/
+    	            	
+    	            	showUploadScreen();
+    	                break;
+    	        }
+    	    }
+    	};
     }
 
 
@@ -105,13 +118,6 @@ public class JungleeClickActivity extends Activity {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
         return true;
-    }
-    
-    
-    private void showLocation() {
-    	LocationUtility locationTracker = new LocationUtility(this, false);
-    	String locationString = locationTracker.getReadableLocation();
-    	Toast.makeText(this, locationString, Toast.LENGTH_LONG).show();
     }
     
     private void takePicture() {
@@ -136,60 +142,58 @@ public class JungleeClickActivity extends Activity {
     	photoPickerIntent.setType("image/*");
     	startActivityForResult(photoPickerIntent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
     }
+    
+    private void onPictureSelected() {
+    	compressSelectedPicture();
+    }
 
-    private void compressRecentPicture() {
+    private void compressSelectedPicture() {
     	if(picture==null) {
-    		 Toast.makeText(this, "No picture selected for compression.", Toast.LENGTH_LONG).show();
-    		 return;
+    		return;
     	}
     	
-    	String imgSrc = picture.getAbsolutePath();
+    	final String imgSrc = picture.getAbsolutePath();
     	
-    	/*    	
-    	String imgDst = String.format("%s/%s", ImageUtility.getCompressionTargetDir(), FileSystemUtility.extractFilenameWithExtn(imgSrc));
-    	urls.append(FileSystemUtility.filepathToUrl(imgDst));
-    	try {
-    		FileSystemUtility.copyFile(imgSrc, imgDst);
-    	} catch (IOException e) {
-    		e.printStackTrace();
-    	}
-    	*/
-    	
-    	String compressedFilepath = ImageUtility.compressImage(imgSrc
-    			, ImageUtility.CompressionQuality.HIGH);
-    	fileToUpload = compressedFilepath;
-    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-    	qualityToImgPath.put("HIGH", compressedFilepath);
-    	
-    	compressedFilepath = ImageUtility.compressImage(imgSrc
-    			, ImageUtility.CompressionQuality.MEDIUM);
-    	urls.append("#");
-    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-    	qualityToImgPath.put("MEDIUM", compressedFilepath);
-    	
-    	compressedFilepath = ImageUtility.compressImage(imgSrc
-    			, ImageUtility.CompressionQuality.LOW);
-    	urls.append("#");
-    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-    	qualityToImgPath.put("LOW", compressedFilepath);
+    	Runnable runnable = new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.MESSAGE_COMPRESSION_STARTED));
+		    	
+		    	/*    	
+		    	String imgDst = String.format("%s/%s", ImageUtility.getCompressionTargetDir(), FileSystemUtility.extractFilenameWithExtn(imgSrc));
+		    	urls.append(FileSystemUtility.filepathToUrl(imgDst));
+		    	try {
+		    		FileSystemUtility.copyFile(imgSrc, imgDst);
+		    	} catch (IOException e) {
+		    		e.printStackTrace();
+		    	}
+		    	*/
+		    	
+		    	String compressedFilepath = ImageUtility.compressImage(imgSrc
+		    			, ImageUtility.CompressionQuality.HIGH);
+		    	fileToUpload = compressedFilepath;
+		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+		    	qualityToImgPath.put("HIGH", compressedFilepath);
+		    	
+		    	compressedFilepath = ImageUtility.compressImage(imgSrc
+		    			, ImageUtility.CompressionQuality.MEDIUM);
+		    	urls.append("#");
+		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+		    	qualityToImgPath.put("MEDIUM", compressedFilepath);
+		    	
+		    	compressedFilepath = ImageUtility.compressImage(imgSrc
+		    			, ImageUtility.CompressionQuality.LOW);
+		    	urls.append("#");
+		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
+		    	qualityToImgPath.put("LOW", compressedFilepath);
 
-
-    	AlertDialog.Builder builder = new AlertDialog.Builder(JungleeClickActivity.this);
-    	builder.setTitle("Compression completed!").setMessage("Do you want to view the compressed images?")
-    	.setCancelable(true)
-    	.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-    		public void onClick(DialogInterface dialog, int id) {
-    			//showCompressedImgs();
-    			showUploadScreen();
-    		}
-    	})
-    	.setNegativeButton("No", new DialogInterface.OnClickListener() {
-    		public void onClick(DialogInterface dialog, int id) {
-    			dialog.dismiss();
-    		}
-    	});
-    	AlertDialog alert = builder.create();
-    	alert.show();
+		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.MESSAGE_COMPRESSION_COMPLETED));
+		    }
+		};
+		Thread thread = new Thread(runnable);
+        thread.start();
     }
     
     private void showCompressedImgs() {
@@ -207,23 +211,6 @@ public class JungleeClickActivity extends Activity {
     	
     	startActivity(i);
     }
-    
-    private void uploadRecentPicture() {
-    	if(fileToUpload != null) {
-    		Runnable runnable = new Runnable()
-    		{
-    		    @Override
-    		    public void run()
-    		    {
-    		    	AsyncHttpClientFileUploader fileUploader = new AsyncHttpClientFileUploader();
-    	    		fileUploader.uploadFile(String.format("%s/%s", JUNGLEE_SERVER, UPLOAD_ACTION), new File(fileToUpload));
-
-    		    }
-    		};
-    		Thread thread = new Thread(runnable);
-            thread.start();
-    	}
-    }
 
 
 	@Override
@@ -240,10 +227,22 @@ public class JungleeClickActivity extends Activity {
 					imageUri = data.getData();
 				}
 				picture = ImageUtility.convertImageUriToFile (imageUri, this);
+				
+				onPictureSelected();
 			} else {
 				picture = null;
 				fileName = null;
 			}
+		}
+	}
+	
+	private void showCompressionProgressIndicator(boolean showDlg) {
+		if(progressDlg != null) {
+			if(showDlg && !progressDlg.isShowing()){
+		        progressDlg.show();
+		    } else if(!showDlg && progressDlg.isShowing()) {
+		    	progressDlg.dismiss();
+		    }
 		}
 	}
     

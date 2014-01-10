@@ -10,10 +10,18 @@ import java.util.HashMap;
 import com.example.jungleeclick.R;
 import com.example.jungleeclick.R.layout;
 import com.example.jungleeclick.R.menu;
+import com.junglee.events.GlobalEventID;
+import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.ImageUtility;
+import com.junglee.utils.LocationUtility;
+import com.junglee.utils.UIUtility;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.app.Activity;
+import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -28,15 +36,25 @@ import android.widget.TextView;
 
 public class ImgUploadActivity extends Activity {
 	
+	static final String JUNGLEE_SERVER = "http://192.168.0.225:8888";
+	static final String UPLOAD_ACTION = "upload";
+	
 	private ImageView imgView = null;
 	
 	private RadioButton radioHigh = null;
 	private RadioButton radioMedium = null;
 	private RadioButton radioLow = null;
 	
-	private TextView txtSize = null;
+	private TextView sizeView = null;
+	
+	private TextView locationView = null;
 	
 	private Button uploadBtn = null;
+	
+
+	
+	ProgressDialog progressDlg = null;
+	Handler handler = null;
 	
 	private HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
 
@@ -67,7 +85,9 @@ public class ImgUploadActivity extends Activity {
 		radioMedium = (RadioButton) findViewById(R.id.radio_medium);
 		radioLow = (RadioButton) findViewById(R.id.radio_low);
 		
-		txtSize = (TextView) findViewById(R.id.file_size);
+		sizeView = (TextView) findViewById(R.id.file_size);
+		locationView = (TextView) findViewById(R.id.location_value);
+		locationView.setText("--");
 		
 		uploadBtn = (Button) findViewById(R.id.btn_upload);
 		uploadBtn.setOnClickListener(new Button.OnClickListener() {           
@@ -79,7 +99,40 @@ public class ImgUploadActivity extends Activity {
         	  }
         });
 		
+		progressDlg = new ProgressDialog(this);
+		handler = new Handler(){
+    	    @Override
+    	    public void handleMessage(Message msg){
+
+    	    	int msgId = msg.getData().getInt("message_id");
+    	        switch(msgId){
+    	            case GlobalEventID.MESSAGE_UPDATE_LOCATION:
+    	            	String location = msg.getData().getString("location");
+    	            	locationView.setText(location==null?"Unknown":location);
+
+    	                break;
+    	                
+    	            case GlobalEventID.MESSAGE_UPLOAD_STARTED:
+    	            	UIUtility.showProgressIndicator(progressDlg, null, true);
+
+    	                break;
+    	            case GlobalEventID.MESSAGE_UPLOAD_SUCCEEDED:
+    	            	UIUtility.showProgressIndicator(progressDlg, null, false);
+    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, "Upload Complete!");
+
+    	                break;
+    	            case GlobalEventID.MESSAGE_UPLOAD_FAILED:
+    	            	UIUtility.showProgressIndicator(progressDlg, null, false);
+    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, "Upload Failed!");
+
+    	                break;
+    	        }
+    	    }
+    	};
+		
 		reloadPicture();
+		
+		refreshLocation();
 	}
 
 	@Override
@@ -105,11 +158,36 @@ public class ImgUploadActivity extends Activity {
 			
 			File file = new File(imgPath);
 		    
-			txtSize.setText(FileSystemUtility.getFileSizeAsString(file.length()));
+			sizeView.setText(FileSystemUtility.getFileSizeAsString(file.length()));
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
+	
+	private void refreshLocation() {
+		
+    	
+    	Runnable runnable = new Runnable()
+		{
+		    @Override
+		    public void run()
+		    {
+		    	LocationUtility locationTracker = new LocationUtility(ImgUploadActivity.this, false);
+		    	String locationString = locationTracker.getReadableLocation();
+
+		    	Message msgObj = handler.obtainMessage();
+		    	Bundle b = new Bundle();
+		    	b.putString("location", locationString);
+		    	b.putInt("message_id", GlobalEventID.MESSAGE_UPDATE_LOCATION);
+		    	msgObj.setData(b);
+		    	handler.sendMessage(msgObj);		           
+		    }
+		};
+		Thread thread = new Thread(runnable);
+        thread.start();
+	}
+	
+	
 	private void uploadPicture() {
 		String imgPath = null;
 		if(radioHigh.isChecked()) {
@@ -120,7 +198,22 @@ public class ImgUploadActivity extends Activity {
 			imgPath = qualityToImgPath.get("LOW");
 		}
 		
-		
+		final String imgToUpload = imgPath;
+    	if(imgToUpload != null) {
+    		Runnable runnable = new Runnable()
+    		{
+    		    @Override
+    		    public void run()
+    		    {
+    		    	AsyncHttpClientFileUploader fileUploader = new AsyncHttpClientFileUploader();
+    		    	fileUploader.setHandler(handler);
+    	    		fileUploader.uploadFile(String.format("%s/%s", JUNGLEE_SERVER, UPLOAD_ACTION), new File(imgToUpload));
+
+    		    }
+    		};
+    		Thread thread = new Thread(runnable);
+            thread.start();
+    	}
 	}
 
 }

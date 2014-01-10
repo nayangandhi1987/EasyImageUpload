@@ -69,6 +69,28 @@
     
     </LinearLayout>
     
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:orientation="horizontal" >
+    
+        <TextView
+        android:id="@+id/location_head"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="4dp"
+        android:text="@string/location"
+        android:gravity="left" />
+        
+        <TextView
+        android:id="@+id/location_value"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="left" />
+    
+    </LinearLayout>
+    
     <Button
         android:id="@+id/btn_upload"
         android:layout_width="fill_parent"

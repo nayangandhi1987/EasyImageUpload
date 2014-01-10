@@ -9,43 +9,33 @@
         android:id="@+id/txt_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.20"
         android:gravity="center"
-        android:text="Click/Select >> Compress >> Upload !!" />
+        android:textSize="24dp"
+        android:layout_weight="1"
+        android:text="@string/intro_text" />
     
-    <Button
-        android:id="@+id/btn_loc"
-        android:layout_width="match_parent"
+    <LinearLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:text="Location" />
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="8dp"
+        android:gravity="bottom"
+        android:orientation="horizontal" >
 
     <Button
         android:id="@+id/btn_cam"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.20"
+        android:layout_weight="0.5"
         android:text="Camera" />
 
     <Button
         android:id="@+id/btn_gallery"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_weight="0.20"
+        android:layout_weight="0.5"
         android:text="Gallery" />
-
-    <Button
-        android:id="@+id/btn_compress"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:text="Compress" />
-
-    <Button
-        android:id="@+id/btn_upload"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="0.20"
-        android:text="Upload" />
+    
+    </LinearLayout>
 
 </LinearLayout>
