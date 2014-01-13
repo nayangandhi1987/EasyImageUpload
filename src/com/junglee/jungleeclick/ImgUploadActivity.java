@@ -14,6 +14,7 @@ import com.junglee.events.GlobalEventID;
 import com.junglee.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
 import com.junglee.utils.UIUtility;
 
@@ -106,24 +107,24 @@ public class ImgUploadActivity extends Activity {
 
     	    	int msgId = msg.getData().getInt("message_id");
     	        switch(msgId){
-    	            case GlobalEventID.MESSAGE_UPDATE_LOCATION:
+    	            case GlobalEventID.UPDATE_LOCATION:
     	            	String location = msg.getData().getString("location");
     	            	locationView.setText(location==null?"Unknown":location);
 
     	                break;
     	                
-    	            case GlobalEventID.MESSAGE_UPLOAD_STARTED:
+    	            case GlobalEventID.UPLOAD_STARTED:
     	            	UIUtility.showProgressIndicator(progressDlg, null, true);
 
     	                break;
-    	            case GlobalEventID.MESSAGE_UPLOAD_SUCCEEDED:
+    	            case GlobalEventID.UPLOAD_SUCCEEDED:
     	            	UIUtility.showProgressIndicator(progressDlg, null, false);
-    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, "Upload Complete!");
+    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, GlobalStrings.UPLOAD_COMPLETE);
 
     	                break;
-    	            case GlobalEventID.MESSAGE_UPLOAD_FAILED:
+    	            case GlobalEventID.UPLOAD_FAILED:
     	            	UIUtility.showProgressIndicator(progressDlg, null, false);
-    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, "Upload Failed!");
+    	            	UIUtility.showToastMsgShort(ImgUploadActivity.this, GlobalStrings.UPLOAD_FAILED);
 
     	                break;
     	        }
@@ -178,7 +179,7 @@ public class ImgUploadActivity extends Activity {
 		    	Message msgObj = handler.obtainMessage();
 		    	Bundle b = new Bundle();
 		    	b.putString("location", locationString);
-		    	b.putInt("message_id", GlobalEventID.MESSAGE_UPDATE_LOCATION);
+		    	b.putInt("message_id", GlobalEventID.UPDATE_LOCATION);
 		    	msgObj.setData(b);
 		    	handler.sendMessage(msgObj);		           
 		    }

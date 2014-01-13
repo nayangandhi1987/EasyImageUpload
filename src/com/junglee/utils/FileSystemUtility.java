@@ -76,6 +76,10 @@ public class FileSystemUtility {
 	        	deleteRecursive(child);
 	}
 	
+	public static boolean isSdPresent() {
+	    return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+	}
+	
 	public static String getFileSizeAsString(long size) {
 		String sizeAsString = null;
 		

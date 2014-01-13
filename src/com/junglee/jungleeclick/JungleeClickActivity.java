@@ -8,6 +8,7 @@ import java.util.Map.Entry;
 import com.example.jungleeclick.R;
 import com.junglee.events.GlobalEventID;
 import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
 
 import android.net.Uri;
@@ -15,6 +16,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Files.FileColumns;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
@@ -71,18 +73,18 @@ public class JungleeClickActivity extends Activity {
         });
         
         progressDlg = new ProgressDialog(this);
-        progressDlg.setMessage("Reducing image size...");
+        progressDlg.setMessage(GlobalStrings.REDUCING_IMG_SZ);
         
         handler = new Handler(){
     	    @Override
     	    public void handleMessage(Message msg){
 
     	        switch(msg.what){
-    	            case GlobalEventID.MESSAGE_COMPRESSION_STARTED:
+    	            case GlobalEventID.COMPRESSION_STARTED:
     	            	showCompressionProgressIndicator(true);
 
     	                break;
-    	            case GlobalEventID.MESSAGE_COMPRESSION_COMPLETED:
+    	            case GlobalEventID.COMPRESSION_COMPLETED:
     	            	showCompressionProgressIndicator(false);
     	            	
     	            	/*
@@ -127,10 +129,12 @@ public class JungleeClickActivity extends Activity {
     	//create parameters for Intent with filename
     	ContentValues values = new ContentValues();
     	values.put(MediaStore.Images.Media.TITLE, fileName);
-    	values.put(MediaStore.Images.Media.DESCRIPTION, "Image captured by camera using JungleeClick app!");
+    	values.put(MediaStore.Images.Media.DESCRIPTION, GlobalStrings.CAPTURED_IMG_DESC);
     	//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
+    	
     	imageUri = getContentResolver().insert(
     	        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    	
     	//create new Intent
     	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
@@ -161,7 +165,7 @@ public class JungleeClickActivity extends Activity {
 		    @Override
 		    public void run()
 		    {
-		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.MESSAGE_COMPRESSION_STARTED));
+		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.COMPRESSION_STARTED));
 		    	
 		    	/*    	
 		    	String imgDst = String.format("%s/%s", ImageUtility.getCompressionTargetDir(), FileSystemUtility.extractFilenameWithExtn(imgSrc));
@@ -190,7 +194,7 @@ public class JungleeClickActivity extends Activity {
 		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
 		    	qualityToImgPath.put("LOW", compressedFilepath);
 
-		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.MESSAGE_COMPRESSION_COMPLETED));
+		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.COMPRESSION_COMPLETED));
 		    }
 		};
 		Thread thread = new Thread(runnable);

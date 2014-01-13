@@ -9,7 +9,7 @@ public class UIUtility {
 	public static void showProgressIndicator(ProgressDialog dlg, String msg, boolean showDlg) {
 		if(dlg != null) {
 			if(showDlg && !dlg.isShowing()){
-				dlg.setMessage(msg==null?"Please wait...":msg);
+				dlg.setMessage(msg==null?GlobalStrings.PLS_WAIT:msg);
 				dlg.show();
 		    } else if(!showDlg && dlg.isShowing()) {
 		    	dlg.dismiss();

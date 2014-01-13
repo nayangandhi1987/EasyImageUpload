@@ -40,13 +40,13 @@ public class AsyncHttpClientFileUploader {
 			@Override
 			public void onStart() {
 				Log.i("JungleeClick", "Upload Started !!");
-				sendMsgToHandler(GlobalEventID.MESSAGE_UPLOAD_STARTED);
+				sendMsgToHandler(GlobalEventID.UPLOAD_STARTED);
 			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
 				Log.i("JungleeClick", "Upload Succeeded : StatusCode="+statusCode);
-				sendMsgToHandler(GlobalEventID.MESSAGE_UPLOAD_SUCCEEDED);
+				sendMsgToHandler(GlobalEventID.UPLOAD_SUCCEEDED);
 			}
 
 			@Override
@@ -54,7 +54,7 @@ public class AsyncHttpClientFileUploader {
 			{
 				Log.i("JungleeClick", "Upload Failed : StatusCode="+statusCode);
 				Log.i("JungleeClick", "Upload Failed : ResponseBody="+responseBody);
-				sendMsgToHandler(GlobalEventID.MESSAGE_UPLOAD_FAILED);
+				sendMsgToHandler(GlobalEventID.UPLOAD_FAILED);
 			}
 
 			@Override
