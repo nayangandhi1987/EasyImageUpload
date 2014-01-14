@@ -14,6 +14,7 @@ import com.junglee.events.GlobalEventID;
 import com.junglee.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.network.HttpClientFileUploader;
+import com.junglee.settings.AppSettings;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
@@ -37,9 +38,6 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 public class ImgUploadActivity extends Activity {
-	
-	static final String JUNGLEE_SERVER = "http://192.168.0.225:8888";
-	static final String UPLOAD_ACTION = "upload";
 	
 	private ImageView imgView = null;
 	
@@ -209,7 +207,7 @@ public class ImgUploadActivity extends Activity {
     		    {
     		    	AsyncHttpClientFileUploader fileUploader = new AsyncHttpClientFileUploader();
     		    	fileUploader.setHandler(handler);
-    	    		fileUploader.uploadFile(String.format("%s/%s", JUNGLEE_SERVER, UPLOAD_ACTION), new File(imgToUpload));
+    	    		fileUploader.uploadFile(String.format("%s/%s", AppSettings.getInstance().getUploadServer(),  AppSettings.getInstance().getUploadAction()), new File(imgToUpload));
 
     		    }
     		};
