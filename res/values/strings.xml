@@ -11,5 +11,6 @@
     <string name="medium">Medium</string>
     <string name="low">Low</string>
     <string name="location">Location:</string>
+    <string name="title_activity_junglee_web_container">JungleeWebContainer</string>
 
 </resources>

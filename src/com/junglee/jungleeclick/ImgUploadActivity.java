@@ -13,6 +13,7 @@ import com.example.jungleeclick.R.menu;
 import com.junglee.events.GlobalEventID;
 import com.junglee.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
+import com.junglee.network.HttpClientFileUploader;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;

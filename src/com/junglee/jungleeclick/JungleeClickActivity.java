@@ -10,6 +10,7 @@ import com.junglee.events.GlobalEventID;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
+import com.junglee.webcontainer.JungleeWebContainerActivity;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -72,6 +73,16 @@ public class JungleeClickActivity extends Activity {
         	  }
         });
         
+        Button wvBtn = (Button) findViewById(R.id.btn_wv) ;
+        wvBtn.setOnClickListener(new Button.OnClickListener() {           
+
+        	  @Override
+        	  public void onClick(View v) 
+        	  {
+        		  gotoWebview();
+        	  }
+        });
+        
         progressDlg = new ProgressDialog(this);
         progressDlg.setMessage(GlobalStrings.REDUCING_IMG_SZ);
         
@@ -116,7 +127,8 @@ public class JungleeClickActivity extends Activity {
     }
 
 
-    @Override
+
+	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
@@ -216,6 +228,11 @@ public class JungleeClickActivity extends Activity {
     	
     	startActivity(i);
     }
+    
+    private void gotoWebview() {
+    	Intent i = new Intent(getApplicationContext(), JungleeWebContainerActivity.class);
+    	startActivity(i);
+	}
 
 
 	@Override

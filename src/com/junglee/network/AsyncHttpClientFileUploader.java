@@ -25,8 +25,8 @@ public class AsyncHttpClientFileUploader {
 	}
 	
 	private static void post(String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
-	      client.post(url, params, responseHandler);
-	  }
+		client.post(url, params, responseHandler);
+	}
 	
 	public void uploadFile(String url, File file) {
 		RequestParams params = new RequestParams();

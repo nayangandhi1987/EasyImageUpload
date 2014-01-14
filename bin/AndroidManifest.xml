@@ -36,6 +36,10 @@
             android:name="com.junglee.jungleeclick.ImgUploadActivity"
             android:label="@string/title_activity_img_upload" >
         </activity>
+        <activity
+            android:name="com.junglee.webcontainer.JungleeWebContainerActivity"
+            android:label="@string/title_activity_junglee_web_container" >
+        </activity>
     </application>
 
 </manifest>

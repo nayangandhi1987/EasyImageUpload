@@ -110,7 +110,7 @@ public class HttpClientFileUploader {
  
             /*Need to construct a FileBody with the file that needs to be attached and specify the mime type of the file. Add the fileBody to the request as an another part.
             This part will be considered as file part and the rest of them as usual form-data parts*/
-            ContentBody fileBody = new FileBody(file, mimeType) ;
+            FileBody fileBody = new FileBody(file, mimeType) ;
             multiPartEntity.addPart("file", fileBody);
  
             postRequest.setEntity(multiPartEntity) ;
