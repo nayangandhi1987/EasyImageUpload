@@ -6,7 +6,9 @@
         "HELP_VERSION": 1,
         "CONTROLS": [
           {
-            "GESTURE_TYPE": 0,
+            "IMG_TYPE": 2,
+            "CUSTOM_IMG_ID": "",
+            "IMG_CENTRE_AS_REF": true,
             "IMG_PLACEMENT": 0,
             "TEXT": "This is a test string - 1",
             "TXT_RELATIVE_PLACEMENT": 0,
@@ -14,12 +16,14 @@
             "VIEW_ID": "btn_gallery"
           },
           {
-            "GESTURE_TYPE": 0,
+            "IMG_TYPE": 0,
+            "CUSTOM_IMG_ID": "",
+            "IMG_CENTRE_AS_REF": false,
             "IMG_PLACEMENT": 0,
             "TEXT": "This is a test string - 2",
             "TXT_RELATIVE_PLACEMENT": 0,
             "TEXT_GRAVITY": 17,
-            "VIEW_ID": "btn_cam"
+            "VIEW_ID": ""
           }
         ]
       }
@@ -30,7 +34,9 @@
         "HELP_VERSION": 1,
         "CONTROLS": [
           {
-            "GESTURE_TYPE": 0,
+            "IMG_TYPE": 0,
+            "CUSTOM_IMG_ID": "",
+            "IMG_CENTRE_AS_REF": false,
             "IMG_PLACEMENT": 0,
             "TEXT": "This is a test string - 1",
             "TXT_RELATIVE_PLACEMENT": 0,
@@ -38,7 +44,9 @@
             "VIEW_ID": "btn_unknown_1"
           },
           {
-            "GESTURE_TYPE": 0,
+            "IMG_TYPE": 0,
+            "CUSTOM_IMG_ID": "",
+            "IMG_CENTRE_AS_REF": false,
             "IMG_PLACEMENT": 0,
             "TEXT": "This is a test string - 2",
             "TXT_RELATIVE_PLACEMENT": 0,

@@ -9,13 +9,15 @@ import android.view.Gravity;
 public class HelpScreenUIControlParams {
 	
 	public HelpScreenUIControlParams() {
-		gestureType = HelpScreenUIControlParams.GESTURE_TYPE.SINGLE_TAP;
+		imgType = HelpScreenUIControlParams.IMAGE_TYPE.SINGLE_TAP;
     	imgPlacement = HelpScreenUIControlParams.IMG_PLACEMENT.CENTER;
     	txtGravity = Gravity.RIGHT;
     	txtPlacement = HelpScreenUIControlParams.TXT_RELATIVE_PLACEMENT.BELOW;   	
 	}
 
-	public enum GESTURE_TYPE {
+	public enum IMAGE_TYPE {
+		NONE,
+		CUSTOM,
 		SINGLE_TAP,
 		DOUBLE_TAP,
 		PRESS_AND_HOLD,
@@ -46,7 +48,9 @@ public class HelpScreenUIControlParams {
 		RIGHT
 	}
 
-	public GESTURE_TYPE gestureType;
+	public IMAGE_TYPE imgType;
+	public String customImgId;
+	public boolean useImgCentreAsRef;
 	public String text;
 	public Rect viewRect;
 	public IMG_PLACEMENT imgPlacement;
@@ -55,7 +59,9 @@ public class HelpScreenUIControlParams {
 	
 	public HelpScreenUIControlParams(JSONObject json) {
 		try {
-			gestureType = GESTURE_TYPE.values()[json.getInt("GESTURE_TYPE")];
+			imgType = IMAGE_TYPE.values()[json.getInt("IMG_TYPE")];
+			customImgId = json.getString("CUSTOM_IMG_ID");
+			useImgCentreAsRef = json.getBoolean("IMG_CENTRE_AS_REF");
 			imgPlacement = IMG_PLACEMENT.values()[json.getInt("IMG_PLACEMENT")];
 			text = json.getString("TEXT");
 			txtPlacement = TXT_RELATIVE_PLACEMENT.values()[json.getInt("TXT_RELATIVE_PLACEMENT")];
@@ -64,12 +70,14 @@ public class HelpScreenUIControlParams {
 			e.printStackTrace();
 		}   	
 	}
-	
+
 	@Override
 	public String toString() {
-		return "HelpScreenUIControlParams [gestureType=" + gestureType
-				+ ", text=" + text + ", viewRect=" + viewRect
-				+ ", imgPlacement=" + imgPlacement + ", txtPlacement="
-				+ txtPlacement + ", txtGravity=" + txtGravity + "]";
+		return "HelpScreenUIControlParams [imgType=" + imgType
+				+ ", customImgId=" + customImgId + ", useImgCentreArRef="
+				+ useImgCentreAsRef + ", text=" + text + ", viewRect="
+				+ viewRect + ", imgPlacement=" + imgPlacement
+				+ ", txtPlacement=" + txtPlacement + ", txtGravity="
+				+ txtGravity + "]";
 	}
 }

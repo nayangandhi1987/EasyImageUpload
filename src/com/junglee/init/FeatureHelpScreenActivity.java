@@ -74,7 +74,7 @@ public class FeatureHelpScreenActivity extends Activity {
 			Log.i("JungleeClick", control.toString());
 			
 			TextView txtView = createTxtView(control.text);
-			ImageView imgView = createImgView(getRscIdForGesture(control.gestureType));
+			ImageView imgView = createImgView(getRscIdForGesture(control.imgType, control.customImgId));
 			
 			addViewToLayout(imgView);
 			addViewToLayout(txtView);				
@@ -85,6 +85,11 @@ public class FeatureHelpScreenActivity extends Activity {
 	    	
 	    	Point posImg = getPositionInRect(control.viewRect, control.imgPlacement);
 	    	int posImgX = posImg.x, posImgY = posImg.y;
+	    	if(control.useImgCentreAsRef) {
+	    		posImgX -= imgView.getMeasuredWidth()/2;
+	    		posImgY -= imgView.getMeasuredHeight()/2;
+	    	}
+	    	
 	    	ViewHelper.setX(imgView, posImgX);	    	
 	    	ViewHelper.setY(imgView, posImgY);
 	    	
@@ -142,7 +147,9 @@ public class FeatureHelpScreenActivity extends Activity {
 	
 	private ImageView createImgView(int resourceId) {
 		ImageView imgview = new ImageView(this);
-		imgview.setImageResource( resourceId );
+		if(resourceId > 0) {
+			imgview.setImageResource( resourceId );
+		}
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT );
 		params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
 		params.addRule(RelativeLayout.ALIGN_PARENT_TOP);
@@ -158,10 +165,18 @@ public class FeatureHelpScreenActivity extends Activity {
 		return txtview;
 	}
 	
-	private int getRscIdForGesture(HelpScreenUIControlParams.GESTURE_TYPE type) {
+	private int getRscIdForGesture(HelpScreenUIControlParams.IMAGE_TYPE type, String customId) {
 		int rscId = R.drawable.single_tap;
 		
 		switch(type) {
+		case NONE:
+			rscId = 0;
+			break;
+			
+		case CUSTOM:
+			rscId = getResources().getIdentifier(customId, "drawable", getPackageName());
+			break;
+			
 		case SINGLE_TAP:
 			rscId = R.drawable.single_tap;
 			break;

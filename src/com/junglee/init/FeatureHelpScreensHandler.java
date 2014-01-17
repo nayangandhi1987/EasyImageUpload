@@ -16,10 +16,12 @@ import android.content.SharedPreferences;
 import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.junglee.data.IntentData;
 import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.StringUtility;
 
 public class FeatureHelpScreensHandler {
 	private static FeatureHelpScreensHandler instance = null;
@@ -119,22 +121,32 @@ public class FeatureHelpScreensHandler {
 	}
 	
 	private Rect getViewLocationOnScreen(Activity activity, String viewName) {
-		int viewId = activity.getResources().getIdentifier(viewName, "id", activity.getPackageName());
-		View view= activity.findViewById(viewId);
+		if(activity != null) {
+			if(StringUtility.isPopulated(viewName)) {
+				int viewId = activity.getResources().getIdentifier(viewName, "id", activity.getPackageName());
+				View view= activity.findViewById(viewId);
 
-		if(view != null) {
-			int[] loc = new int[2];
-			view.getLocationOnScreen(loc);
-			int left = loc[0];
-			int top = loc[1] - 50;
-			int right = left + view.getWidth();
-			int bottom = top + view.getHeight();
+				if(view != null) {
+					int[] loc = new int[2];
+					view.getLocationOnScreen(loc);
+					int left = loc[0];
+					int top = loc[1] - 50;
+					int right = left + view.getWidth();
+					int bottom = top + view.getHeight();
 
-			Rect r = new Rect(left, top, right, bottom);
+					Rect r = new Rect(left, top, right, bottom);
 
-			return r;
+					return r;
+				} else {
+					return null;
+				}
+			} else {
+				DisplayMetrics metrics=new DisplayMetrics();
+				activity.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+				return new Rect(0, 0, metrics.widthPixels, metrics.heightPixels);
+			}
+		} else {
+			return null;
 		}
-
-		return null;
 	}
 }
