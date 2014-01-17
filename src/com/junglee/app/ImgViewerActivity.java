@@ -1,4 +1,4 @@
-package com.junglee.jungleeclick;
+package com.junglee.app;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -6,7 +6,6 @@ import java.util.List;
 
 import ru.truba.touchgallery.GalleryWidget.GalleryViewPager;
 import ru.truba.touchgallery.GalleryWidget.UrlPagerAdapter;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;

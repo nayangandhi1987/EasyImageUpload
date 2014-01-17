@@ -20,8 +20,8 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
         <activity
-            android:name="com.junglee.jungleeclick.JungleeClickActivity"
-            android:label="@string/app_name" >
+            android:name="com.junglee.init.SplashScreenActivity"
+            android:theme="@android:style/Theme.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -29,16 +29,28 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.junglee.jungleeclick.ImgViewerActivity"
+            android:name="com.junglee.app.MainActivity"
             android:label="@string/app_name" >
         </activity>
         <activity
-            android:name="com.junglee.jungleeclick.ImgUploadActivity"
+            android:name="com.junglee.app.JungleeClickActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.junglee.app.ImgViewerActivity"
+            android:label="@string/app_name" >
+        </activity>
+        <activity
+            android:name="com.junglee.app.ImgUploadActivity"
             android:label="@string/title_activity_img_upload" >
         </activity>
         <activity
             android:name="com.junglee.webcontainer.JungleeWebContainerActivity"
             android:label="@string/title_activity_junglee_web_container" >
+        </activity>
+        <activity
+            android:name="com.junglee.init.FeatureHelpScreenActivity"
+            android:theme="@style/TransparentTheme" >
         </activity>
     </application>
 

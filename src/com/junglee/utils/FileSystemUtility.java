@@ -1,12 +1,22 @@
 package com.junglee.utils;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.content.res.AssetManager;
 import android.util.Log;
 
 public class FileSystemUtility {
@@ -62,6 +72,55 @@ public class FileSystemUtility {
         out.close();
         Log.i("JungleeClick", "Copied To => " + fileDst);
     }
+	
+	String readFileContent(String fileName) {
+	    try {
+	        StringBuilder sb = new StringBuilder();
+	        BufferedReader br = new BufferedReader(new FileReader(fileName));
+	        String line = br.readLine();
+
+	        while (line != null) {
+	            sb.append(line);
+	            sb.append("\n");
+	            line = br.readLine();
+	        }
+	        
+	        br.close();
+	        return sb.toString();
+	    } catch(Exception e) {
+	    	
+	    }
+	    
+	    return null;
+	}
+	
+	public static String readAssetFileContent(String filepath, Context c) {
+		AssetManager assetManager = c.getAssets();
+
+		Map<String, JSONObject> helpScreenParamsDataMap = new HashMap<String, JSONObject>();
+		String content = null;
+		try {
+			InputStream fileIStream = assetManager.open("HelpScreenJson");
+			if (fileIStream != null) {
+				StringWriter writer = new StringWriter();
+
+				char[] buffer = new char[1024];
+
+				BufferedReader reader = new BufferedReader(new InputStreamReader(fileIStream, "UTF-8"));
+				int n;
+				while ((n = reader.read(buffer)) != -1) {
+					writer.write(buffer, 0, n);
+				}
+
+				content = writer.toString();
+				fileIStream.close();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return content;
+	}
 	
 	public static void deleteRecursive(File fileOrDirectory) {
 	    if (fileOrDirectory.isDirectory())

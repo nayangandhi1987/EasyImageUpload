@@ -1,34 +1,32 @@
-package com.junglee.jungleeclick;
+package com.junglee.app;
 
 import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-
-import com.example.jungleeclick.R;
-import com.junglee.events.GlobalEventID;
-import com.junglee.utils.FileSystemUtility;
-import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.ImageUtility;
-import com.junglee.webcontainer.JungleeWebContainerActivity;
-
+import android.app.Activity;
+import android.app.ProgressDialog;
+import android.content.ContentValues;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Files.FileColumns;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.ProgressDialog;
-import android.content.ContentValues;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.jungleeclick.R;
+import com.junglee.events.GlobalEventID;
+import com.junglee.init.FeatureHelpScreensHandler;
+import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.GlobalStrings;
+import com.junglee.utils.ImageUtility;
+import com.junglee.webcontainer.JungleeWebContainerActivity;
+
 public class JungleeClickActivity extends Activity {
+	private String IDENTIFIER = "JUNGLEE_CLICK_ACTIVITY";
 	
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;	
@@ -51,7 +49,7 @@ public class JungleeClickActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_local_ad);
         
         Button camBtn = (Button) findViewById(R.id.btn_cam) ;
         camBtn.setOnClickListener(new Button.OnClickListener() {           
@@ -86,6 +84,25 @@ public class JungleeClickActivity extends Activity {
         progressDlg = new ProgressDialog(this);
         progressDlg.setMessage(GlobalStrings.REDUCING_IMG_SZ);
         
+        setupMsgHandler();
+    	
+    	ImageUtility.clearCompressedImages();
+    	
+    	FeatureHelpScreensHandler.getInstance().checkForHelpScreen(IDENTIFIER, this);
+    }
+
+	@Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        // getMenuInflater().inflate(R.menu.main, menu);
+		// return true;
+		
+		return super.onCreateOptionsMenu(menu);
+    }
+
+
+
+	private void setupMsgHandler() {
         handler = new Handler(){
     	    @Override
     	    public void handleMessage(Message msg){
@@ -122,18 +139,7 @@ public class JungleeClickActivity extends Activity {
     	        }
     	    }
     	};
-    	
-    	ImageUtility.clearCompressedImages();
-    }
-
-
-
-	@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
+	}
     
     private void takePicture() {
     	//define the file-name to save photo taken by Camera activity
@@ -265,6 +271,5 @@ public class JungleeClickActivity extends Activity {
 		    	progressDlg.dismiss();
 		    }
 		}
-	}
-    
+	}	
 }

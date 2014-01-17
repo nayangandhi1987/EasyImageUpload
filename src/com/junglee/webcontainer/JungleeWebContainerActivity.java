@@ -3,17 +3,13 @@ package com.junglee.webcontainer;
 import java.io.FileInputStream;
 import java.io.IOException;
 
-import com.example.jungleeclick.R;
-import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.StringUtility;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.webkit.ConsoleMessage;
@@ -23,6 +19,10 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
+import com.example.jungleeclick.R;
+import com.junglee.utils.GlobalStrings;
+import com.junglee.utils.StringUtility;
 
 public class JungleeWebContainerActivity extends Activity {
 	private WebView webview = null;

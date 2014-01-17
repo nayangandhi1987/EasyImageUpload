@@ -1,33 +1,17 @@
-package com.junglee.jungleeclick;
+package com.junglee.app;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.HashMap;
 
-import com.example.jungleeclick.R;
-import com.example.jungleeclick.R.layout;
-import com.example.jungleeclick.R.menu;
-import com.junglee.events.GlobalEventID;
-import com.junglee.location.LocationTracker;
-import com.junglee.network.AsyncHttpClientFileUploader;
-import com.junglee.network.HttpClientFileUploader;
-import com.junglee.settings.AppSettings;
-import com.junglee.utils.FileSystemUtility;
-import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.ImageUtility;
-import com.junglee.utils.UIUtility;
-
-import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
+import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -36,6 +20,15 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
+
+import com.example.jungleeclick.R;
+import com.junglee.events.GlobalEventID;
+import com.junglee.location.LocationTracker;
+import com.junglee.network.AsyncHttpClientFileUploader;
+import com.junglee.settings.AppSettings;
+import com.junglee.utils.FileSystemUtility;
+import com.junglee.utils.GlobalStrings;
+import com.junglee.utils.UIUtility;
 
 public class ImgUploadActivity extends Activity {
 	

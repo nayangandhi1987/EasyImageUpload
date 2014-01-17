@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">JungleeClick</string>
+    <string name="app_name">Junglee App</string>
     <string name="action_settings">Settings</string>
     <string name="hello_world">Hello world!</string>
     <string name="intro_text">Click pictures using camera or select existing images from the gallery. You will be able to choose reduced size images as per your network bandwidth.</string>
@@ -12,5 +12,15 @@
     <string name="low">Low</string>
     <string name="location">Location:</string>
     <string name="title_activity_junglee_web_container">JungleeWebContainer</string>
+    <string name="title_section1">Home</string>
+    <string name="title_section2">Mobile</string>
+    <string name="title_section3">Clothing</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="action_example"></string>
+    <string name="action_settings">Settings</string>
+    <string name="search_title">Search</string>
+    <string name="title_activity_splash_screen">SplashScreenActivity</string>
+    <string name="title_activity_feature_help_screen">FeatureHelpScreenActivity</string>
 
 </resources>

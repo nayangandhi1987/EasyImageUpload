@@ -3,6 +3,8 @@ package com.junglee.network;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+import org.apache.http.Header;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -12,8 +14,6 @@ import com.junglee.events.GlobalEventID;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import org.apache.http.Header;
 
 public class AsyncHttpClientFileUploader {
 	private static AsyncHttpClient client = new AsyncHttpClient();
