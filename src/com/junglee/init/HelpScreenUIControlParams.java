@@ -9,10 +9,7 @@ import android.view.Gravity;
 public class HelpScreenUIControlParams {
 	
 	public HelpScreenUIControlParams() {
-		imgType = HelpScreenUIControlParams.IMAGE_TYPE.SINGLE_TAP;
-    	imgPlacement = HelpScreenUIControlParams.IMG_PLACEMENT.CENTER;
-    	txtGravity = Gravity.RIGHT;
-    	txtPlacement = HelpScreenUIControlParams.TXT_RELATIVE_PLACEMENT.BELOW;   	
+		initDefaultValues();
 	}
 
 	public enum IMAGE_TYPE {
@@ -52,30 +49,65 @@ public class HelpScreenUIControlParams {
 	public String customImgId;
 	public boolean useImgCentreAsRef;
 	public String text;
+	public String textColor;
+	public float textSize;
+	public float minXFactor;
+	public float maxXFactor;
 	public Rect viewRect;
 	public IMG_PLACEMENT imgPlacement;
 	public TXT_RELATIVE_PLACEMENT txtPlacement;
 	public int txtGravity;
 	
 	public HelpScreenUIControlParams(JSONObject json) {
+		initDefaultValues();
+		
 		try {
-			imgType = IMAGE_TYPE.values()[json.getInt("IMG_TYPE")];
-			customImgId = json.getString("CUSTOM_IMG_ID");
-			useImgCentreAsRef = json.getBoolean("IMG_CENTRE_AS_REF");
-			imgPlacement = IMG_PLACEMENT.values()[json.getInt("IMG_PLACEMENT")];
-			text = json.getString("TEXT");
-			txtPlacement = TXT_RELATIVE_PLACEMENT.values()[json.getInt("TXT_RELATIVE_PLACEMENT")];
-			txtGravity = json.getInt("TEXT_GRAVITY");
+			if(json.has("IMG_TYPE"))
+				imgType = IMAGE_TYPE.values()[json.getInt("IMG_TYPE")];
+			if(json.has("CUSTOM_IMG_ID"))
+				customImgId = json.getString("CUSTOM_IMG_ID");
+			if(json.has("IMG_CENTRE_AS_REF"))
+				useImgCentreAsRef = json.getBoolean("IMG_CENTRE_AS_REF");
+			if(json.has("IMG_PLACEMENT"))
+				imgPlacement = IMG_PLACEMENT.values()[json.getInt("IMG_PLACEMENT")];
+			if(json.has("TXT"))
+				text = json.getString("TXT");
+			if(json.has("TXT_CLR"))
+				textColor = json.getString("TXT_CLR");
+			if(json.has("TXT_SZ"))
+				textSize = (float) json.getDouble("TXT_SZ");
+			if(json.has("TXT_MIN_X_FACTOR"))
+				minXFactor = (float) json.getDouble("TXT_MIN_X_FACTOR");
+			if(json.has("TXT_MAX_X_FACTOR"))
+				maxXFactor = (float) json.getDouble("TXT_MAX_X_FACTOR");
+			if(json.has("TXT_RELATIVE_PLACEMENT"))
+				txtPlacement = TXT_RELATIVE_PLACEMENT.values()[json.getInt("TXT_RELATIVE_PLACEMENT")];
+			if(json.has("TEXT_GRAVITY"))
+				txtGravity = json.getInt("TEXT_GRAVITY");
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}   	
+	}
+	
+	private void initDefaultValues() {
+		imgType = HelpScreenUIControlParams.IMAGE_TYPE.SINGLE_TAP;
+    	imgPlacement = HelpScreenUIControlParams.IMG_PLACEMENT.CENTER;
+    	useImgCentreAsRef = false;
+    	textColor = "#FFFFFF";
+    	textSize = 16.0f;
+    	txtGravity = Gravity.CENTER;
+    	txtPlacement = HelpScreenUIControlParams.TXT_RELATIVE_PLACEMENT.BELOW; 
+    	minXFactor = 0.0f;
+    	maxXFactor = 1.0f;
 	}
 
 	@Override
 	public String toString() {
 		return "HelpScreenUIControlParams [imgType=" + imgType
-				+ ", customImgId=" + customImgId + ", useImgCentreArRef="
-				+ useImgCentreAsRef + ", text=" + text + ", viewRect="
+				+ ", customImgId=" + customImgId + ", useImgCentreAsRef="
+				+ useImgCentreAsRef + ", text=" + text + ", textColor="
+				+ textColor + ", textSize=" + textSize + ", minXFactor="
+				+ minXFactor + ", maxXFactor=" + maxXFactor + ", viewRect="
 				+ viewRect + ", imgPlacement=" + imgPlacement
 				+ ", txtPlacement=" + txtPlacement + ", txtGravity="
 				+ txtGravity + "]";

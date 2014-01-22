@@ -24,12 +24,12 @@ import android.widget.TextView;
 import com.example.jungleeclick.R;
 import com.junglee.data.IntentData;
 import com.junglee.init.HelpScreenUIControlParams.IMG_PLACEMENT;
+import com.junglee.utils.StringUtility;
 import com.nineoldandroids.view.ViewHelper;
 
 public class FeatureHelpScreenActivity extends Activity {
 	
-	private static final int TXT_VIEW_ID_BASE = 100;
-	private static final int IMG_VIEW_ID_BASE = 200;
+	private String helpId = null;
 	
 	private RelativeLayout containerLayout = null;
 	
@@ -45,7 +45,7 @@ public class FeatureHelpScreenActivity extends Activity {
 		
 		Bundle extras = getIntent().getExtras();
         if (extras != null) {
-        	String helpId = extras.getString("HELP_ID");
+        	helpId = extras.getString("HELP_ID");
         	controls = IntentData.getInstance().getHelpScreenData(helpId);
         }
 		
@@ -71,17 +71,17 @@ public class FeatureHelpScreenActivity extends Activity {
 	    
 		for(int i = 0; i < controls.size(); ++i) {
 			HelpScreenUIControlParams control = controls.get(i);
-			Log.i("JungleeClick", control.toString());
+			Log.i("JungleeClick", control.toString());			
 			
-			TextView txtView = createTxtView(control.text);
 			ImageView imgView = createImgView(getRscIdForGesture(control.imgType, control.customImgId));
+			TextView txtView = createTxtView(control.text, control.textColor, control.textSize);
 			
 			addViewToLayout(imgView);
 			addViewToLayout(txtView);				
 			
 			txtView.measure(screenWidth, screenHeight);
 			imgView.measure(screenWidth, screenHeight);
-			
+			txtView.setGravity(control.txtGravity);			
 	    	
 	    	Point posImg = getPositionInRect(control.viewRect, control.imgPlacement);
 	    	int posImgX = posImg.x, posImgY = posImg.y;
@@ -96,6 +96,7 @@ public class FeatureHelpScreenActivity extends Activity {
 	    	int imgMidX = posImgX+imgView.getMeasuredWidth()/2;
 	    	int imgMidY = posImgY+imgView.getMeasuredHeight()/2;
 	    	int posTxtX = 0, posTxtY = 0;
+	    	int minX = (int) (control.minXFactor*screenWidth), maxX = (int) (control.maxXFactor*screenWidth);
 	    	int widthtxtView = screenWidth;
 	    	if(control.txtPlacement == HelpScreenUIControlParams.TXT_RELATIVE_PLACEMENT.ABOVE
 	    			|| control.txtPlacement == HelpScreenUIControlParams.TXT_RELATIVE_PLACEMENT.BELOW) {
@@ -130,14 +131,28 @@ public class FeatureHelpScreenActivity extends Activity {
 	    			posTxtX = 0;
 	    			widthtxtView = posImgX;
 	    		}
-	    		
+	    			    		
 	    		posTxtY = imgMidY - txtView.getMeasuredHeight()/2;
 	    	}
-	    	txtView.getLayoutParams().width = widthtxtView;
-	    	ViewHelper.setX(txtView, posTxtX);
-	    	ViewHelper.setY(txtView, posTxtY);
 	    	
-	    	txtView.setGravity(control.txtGravity);
+	    	int x1 = posTxtX;
+    		int x2 = posTxtX+widthtxtView;
+    		int adjustment = 0;
+    		if(x1 < minX) {	    			
+    			adjustment += minX-x1;
+    			x1 = minX;
+    		}
+    		if(x2 > maxX) {	    			
+    			adjustment += x2-maxX;
+    			x2 = maxX;
+    		}
+    		widthtxtView -= adjustment;
+    		posTxtX = x1;
+    		
+    		txtView.getLayoutParams().width = widthtxtView;
+    		
+	    	ViewHelper.setX(txtView, posTxtX);
+	    	ViewHelper.setY(txtView, posTxtY);	    	
 		}
 	}
 	
@@ -156,9 +171,10 @@ public class FeatureHelpScreenActivity extends Activity {
 		imgview.setLayoutParams( params );
 		return imgview;
 	}
-	private TextView createTxtView(String text) {
+	private TextView createTxtView(String text, String textColor, float textSize) {
 		TextView txtview = new TextView(this);
-		txtview.setTextColor(Color.WHITE);
+		txtview.setTextColor(StringUtility.isPopulated(textColor)?Color.parseColor(textColor):Color.WHITE);
+		txtview.setTextSize(textSize);
 		txtview.setText(text);
 		RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams( LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT );
 		txtview.setLayoutParams( params );
@@ -261,13 +277,6 @@ public class FeatureHelpScreenActivity extends Activity {
 		
 		return new Point(posX, posY);
 	}
-	
-	private int getTxtViewIdForArrIdx(int idx) {
-		return TXT_VIEW_ID_BASE + idx;
-	}
-	private int getImgViewIdForArrIdx(int idx) {
-		return IMG_VIEW_ID_BASE + idx;
-	}
 
 	
 	
@@ -308,6 +317,7 @@ public class FeatureHelpScreenActivity extends Activity {
 	}
 	
 	private void onDone() {
+		FeatureHelpScreensHandler.getInstance().killedHelpScreen(helpId);
     	finish();
 	}
 }

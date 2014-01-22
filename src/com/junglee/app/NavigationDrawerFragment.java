@@ -20,6 +20,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -27,8 +28,10 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
+import android.widget.ListView;
 
 import com.example.jungleeclick.R;
+import com.junglee.init.FeatureHelpScreensHandler;
 
 ;
 
@@ -39,6 +42,8 @@ import com.example.jungleeclick.R;
  */
 @SuppressLint("NewApi")
 public class NavigationDrawerFragment extends Fragment {
+	
+	private static String IDENTIFIER = "NAVIGATION_DRAWER_FRAGMENT";
 
     /**
      * Remember the position of the selected item.
@@ -95,6 +100,7 @@ public class NavigationDrawerFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         // Indicate that this fragment would like to influence the set of actions in the action bar.
         setHasOptionsMenu(true);
+        Log.i("JungleeCLick", "Fragment ViewCreated");
     }
 
     @Override
@@ -173,6 +179,7 @@ public class NavigationDrawerFragment extends Fragment {
                         getString(R.string.title_section3),
                 }));*/
         mDrawerListView.setItemChecked(mCurrentSelectedPosition, true);
+        
         return mDrawerListView;
     }
 
@@ -254,7 +261,18 @@ public class NavigationDrawerFragment extends Fragment {
         mDrawerLayout.setDrawerListener(mDrawerToggle);
     }
 
-    private void selectItem(int position) {
+    @Override
+	public void onResume() {
+		super.onResume();
+		
+		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), this.getActivity());
+	}
+    
+    private String getScreenId() {
+		return IDENTIFIER;
+	}
+
+	private void selectItem(int position) {
         mCurrentSelectedPosition = position;
         if (mDrawerListView != null) {
             mDrawerListView.setItemChecked(position, true);

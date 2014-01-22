@@ -35,15 +35,18 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.jungleeclick.R;
+import com.junglee.init.FeatureHelpScreensHandler;
 
 @SuppressLint("NewApi")
 public class MainActivity extends ActionBarActivity
         implements SearchView.OnQueryTextListener, NavigationDrawerFragment.NavigationDrawerCallbacks, httpCallBack {
+	
+	private static String IDENTIFIER = "MAIN_ACTIVITY";
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
      */
-    private NavigationDrawerFragment mNavigationDrawerFragment;
+	private NavigationDrawerFragment mNavigationDrawerFragment;
 
     private String url;
 
@@ -98,6 +101,12 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
+	protected void onPostResume() {
+		super.onPostResume();
+		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), MainActivity.this);
+	}
+
+	@Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -105,6 +114,10 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
+	
+	private String getScreenId() {
+		return IDENTIFIER;
+	}
 
     public void onSectionAttached(int number) {
         switch (number) {
@@ -120,7 +133,7 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    public void restoreActionBar() {
+	public void restoreActionBar() {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
         actionBar.setDisplayShowTitleEnabled(true);

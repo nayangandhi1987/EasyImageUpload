@@ -1006,12 +1006,12 @@ containing a value of this type.
         public static final int action_bar_subtitle=0x7f050023;
         public static final int action_bar_title=0x7f050022;
         public static final int action_context_bar=0x7f05001d;
-        public static final int action_local_ad=0x7f050057;
+        public static final int action_local_ad=0x7f050058;
         public static final int action_menu_divider=0x7f050016;
         public static final int action_menu_presenter=0x7f050017;
         public static final int action_mode_close_button=0x7f050024;
-        public static final int action_search=0x7f050056;
-        public static final int action_settings=0x7f050055;
+        public static final int action_search=0x7f050057;
+        public static final int action_settings=0x7f050056;
         public static final int activity_chooser_view_content=0x7f050025;
         public static final int always=0x7f05000b;
         public static final int beginning=0x7f050011;
@@ -1047,6 +1047,7 @@ containing a value of this type.
         public static final int location_value=0x7f050045;
         public static final int logoView=0x7f050051;
         public static final int middle=0x7f050012;
+        public static final int navItems=0x7f050055;
         public static final int nav_entry=0x7f050053;
         public static final int navigation_drawer=0x7f050050;
         public static final int never=0x7f050009;
@@ -1077,7 +1078,7 @@ containing a value of this type.
         public static final int submit_area=0x7f050039;
         public static final int suggestionList=0x7f05004f;
         public static final int tabMode=0x7f050002;
-        public static final int text_test=0x7f050058;
+        public static final int text_test=0x7f050059;
         public static final int title=0x7f05002b;
         public static final int top_action_bar=0x7f050020;
         public static final int txt_header=0x7f050049;

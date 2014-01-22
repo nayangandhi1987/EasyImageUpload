@@ -26,7 +26,7 @@ import com.junglee.utils.ImageUtility;
 import com.junglee.webcontainer.JungleeWebContainerActivity;
 
 public class JungleeClickActivity extends Activity {
-	private String IDENTIFIER = "JUNGLEE_CLICK_ACTIVITY";
+	private static String IDENTIFIER = "JUNGLEE_CLICK_ACTIVITY";
 	
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;	
@@ -86,10 +86,19 @@ public class JungleeClickActivity extends Activity {
         
         setupMsgHandler();
     	
-    	ImageUtility.clearCompressedImages();
-    	
-    	FeatureHelpScreensHandler.getInstance().checkForHelpScreen(IDENTIFIER, this);
+    	ImageUtility.clearCompressedImages();    	
     }
+    
+    @Override
+	protected void onResume() {
+		super.onResume();
+		
+		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), this);
+	}
+
+	private String getScreenId() {
+		return IDENTIFIER;
+	}
 
 	@Override
     public boolean onCreateOptionsMenu(Menu menu) {
