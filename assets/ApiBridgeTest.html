@@ -1,0 +1,61 @@
+<html>
+<head>
+<script type='text/javascript' src="scripts/JungleeNativeBridge.js"></script>
+<script type='text/javascript'>
+
+function nativeResultHandler(jsonResp){
+	alert("Got a response:\n" + JSON.stringify(jsonResp));
+}
+function pictureHandler(jsonResp){
+	var uri = jsonResp.imageUri;
+	if(uri==null || uri==undefined || uri=='') {
+		alert("No picture taken!");
+	} else {
+		imgToUpload.src = uri;
+	}
+}
+function locationHandler(jsonResp){
+	var location = jsonResp.location;
+	if(location==null || location==undefined || location=='') {
+		alert("Location could not be determined!");
+	} else {
+		document.getElementById("loc").innerHTML=location;
+	}
+}
+function takePicture(){
+	var jsonParam = {};
+	jungleeNative.execute("PictureNamespace","takePicture", pictureHandler, jsonParam);
+}
+function pickFromGallery(){
+	var jsonParam = {};
+	jungleeNative.execute("PictureNamespace","pickFromGallery", pictureHandler, jsonParam);
+}
+function fetchLocation(){
+	var jsonParam = {};
+	jungleeNative.execute("LocationNamespace","fetchLocation", locationHandler, jsonParam);
+}
+function wrongNamespace(){
+	var jsonParam = {};
+	jungleeNative.execute("someNamespace","someFunction", nativeResultHandler, jsonParam);
+}
+function wrongMethod(){
+	var jsonParam = {};
+	jungleeNative.execute("PictureNamespace","someFunction", nativeResultHandler, jsonParam);
+}
+</script>
+</head>
+
+<body>  
+
+  <div>
+    <img id='imgToUpload' src='' width='335' height='420'/>
+    <p id="loc">Location placeholder...</p>
+    <input type="button" onclick="takePicture()" value="Camera" />
+    <input type="button" onclick="pickFromGallery()" value="Gallery" />
+    <input type="button" onclick="fetchLocation()" value="Location" />
+    <input type="button" onclick="wrongNamespace()" value="WrongNamespace" />
+    <input type="button" onclick="wrongMethod()" value="WrongMethod" />
+  </div>
+
+</body>
+</html>

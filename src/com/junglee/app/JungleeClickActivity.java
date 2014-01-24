@@ -23,6 +23,7 @@ import com.junglee.init.FeatureHelpScreensHandler;
 import com.junglee.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
+import com.junglee.webcontainer.ApiBridgeTestActivity;
 import com.junglee.webcontainer.JungleeWebContainerActivity;
 
 public class JungleeClickActivity extends Activity {
@@ -245,7 +246,7 @@ public class JungleeClickActivity extends Activity {
     }
     
     private void gotoWebview() {
-    	Intent i = new Intent(getApplicationContext(), JungleeWebContainerActivity.class);
+    	Intent i = new Intent(getApplicationContext(), ApiBridgeTestActivity.class /*JungleeWebContainerActivity.class*/);
     	startActivity(i);
 	}
 

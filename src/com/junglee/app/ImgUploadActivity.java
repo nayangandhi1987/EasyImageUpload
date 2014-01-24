@@ -99,7 +99,7 @@ public class ImgUploadActivity extends Activity {
 
     	    	int msgId = msg.getData().getInt("message_id");
     	        switch(msgId){
-    	            case GlobalEventID.UPDATE_LOCATION:
+    	            case GlobalEventID.LOCATION_FETCHED:
     	            	String location = msg.getData().getString("location");
     	            	locationView.setText(location==null?"Unknown":location);
 
@@ -171,7 +171,7 @@ public class ImgUploadActivity extends Activity {
 		    	Message msgObj = handler.obtainMessage();
 		    	Bundle b = new Bundle();
 		    	b.putString("location", locationString);
-		    	b.putInt("message_id", GlobalEventID.UPDATE_LOCATION);
+		    	b.putInt("message_id", GlobalEventID.LOCATION_FETCHED);
 		    	msgObj.setData(b);
 		    	handler.sendMessage(msgObj);		           
 		    }

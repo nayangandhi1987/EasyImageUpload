@@ -12,9 +12,9 @@ public final class R {
 		public static final int no_photo = 0x7f02005d;
 	}
 	public static final class layout {
-		public static final int main = 0x7f030022;
+		public static final int main = 0x7f030023;
 	}
 	public static final class string {
-		public static final int app_name = 0x7f0a000d;
+		public static final int app_name = 0x7f050000;
 	}
 }

@@ -38,7 +38,7 @@ public class JungleeWebContainerActivity extends Activity {
     {
 		@JavascriptInterface
 		public void invokeCamera() {
-			Log.i("JungleeClick", "renderHighQualityImg() Called!");			
+			Log.i("JungleeClick", "invokeCamera() Called!");			
 
 	    	//define the file-name to save photo taken by Camera activity
 	    	String fileName = "junglee_cam_picture_" + String.valueOf(System.currentTimeMillis());
