@@ -30,7 +30,7 @@ import com.junglee.commonlib.apibridge.INameSpace;
 import com.junglee.events.GlobalEventID;
 import com.junglee.location.LocationTracker;
 import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.StringUtility;
+import com.junglee.commonlib.utils.StringUtility;
 
 @SuppressLint("NewApi")
 public class ApiBridgeTestActivity extends Activity implements INameSpace {

@@ -26,7 +26,7 @@ import com.junglee.events.GlobalEventID;
 import com.junglee.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.settings.AppSettings;
-import com.junglee.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.UIUtility;
 

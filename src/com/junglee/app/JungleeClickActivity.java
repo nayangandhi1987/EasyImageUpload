@@ -20,7 +20,7 @@ import android.widget.Button;
 import com.example.jungleeclick.R;
 import com.junglee.events.GlobalEventID;
 import com.junglee.init.FeatureHelpScreensHandler;
-import com.junglee.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
 import com.junglee.webcontainer.ApiBridgeTestActivity;

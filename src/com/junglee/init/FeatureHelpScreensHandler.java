@@ -23,8 +23,8 @@ import android.widget.FrameLayout;
 import android.widget.ListView;
 
 import com.junglee.data.IntentData;
-import com.junglee.utils.FileSystemUtility;
-import com.junglee.utils.StringUtility;
+import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.StringUtility;
 import com.junglee.utils.UIUtility;
 
 import android.support.v4.app.Fragment;

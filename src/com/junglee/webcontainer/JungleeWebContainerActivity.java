@@ -22,7 +22,7 @@ import android.webkit.WebViewClient;
 
 import com.example.jungleeclick.R;
 import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.StringUtility;
+import com.junglee.commonlib.utils.StringUtility;
 
 public class JungleeWebContainerActivity extends Activity {
 	private WebView webview = null;

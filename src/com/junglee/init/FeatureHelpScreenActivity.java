@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.example.jungleeclick.R;
 import com.junglee.data.IntentData;
 import com.junglee.init.HelpScreenUIControlParams.IMG_PLACEMENT;
-import com.junglee.utils.StringUtility;
+import com.junglee.commonlib.utils.StringUtility;
 import com.nineoldandroids.view.ViewHelper;
 
 public class FeatureHelpScreenActivity extends Activity {
