@@ -19,15 +19,15 @@ import android.widget.Button;
 
 import com.example.jungleeclick.R;
 import com.junglee.events.GlobalEventID;
-import com.junglee.init.FeatureHelpScreensHandler;
 import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
 import com.junglee.webcontainer.ApiBridgeTestActivity;
-import com.junglee.webcontainer.JungleeWebContainerActivity;
 
-public class JungleeClickActivity extends Activity {
+public class JungleeClickActivity extends JungleeActivity {
 	private static String IDENTIFIER = "JUNGLEE_CLICK_ACTIVITY";
+	
+	private String UI_STATE = null;
 	
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;	
@@ -93,12 +93,16 @@ public class JungleeClickActivity extends Activity {
     @Override
 	protected void onResume() {
 		super.onResume();
-		
-		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), this);
 	}
 
-	private String getScreenId() {
+	@Override
+	protected String getScreenId() {
 		return IDENTIFIER;
+	}
+	
+	@Override
+	protected String getUiState() {
+		return UI_STATE;
 	}
 
 	@Override

@@ -1221,6 +1221,8 @@ containing a value of this type.
         public static final int title_activity_api_bridge_test=0x7f050021;
         public static final int title_activity_feature_help_screen=0x7f050020;
         public static final int title_activity_img_upload=0x7f050011;
+        public static final int title_activity_junglee=0x7f050022;
+        public static final int title_activity_junglee_actionbar=0x7f050023;
         public static final int title_activity_junglee_web_container=0x7f050017;
         public static final int title_activity_splash_screen=0x7f05001f;
         public static final int title_section1=0x7f050018;

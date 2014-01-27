@@ -403,6 +403,8 @@ int string search_title 0x7f05001e
 int string title_activity_api_bridge_test 0x7f050021
 int string title_activity_feature_help_screen 0x7f050020
 int string title_activity_img_upload 0x7f050011
+int string title_activity_junglee 0x7f050022
+int string title_activity_junglee_actionbar 0x7f050023
 int string title_activity_junglee_web_container 0x7f050017
 int string title_activity_splash_screen 0x7f05001f
 int string title_section1 0x7f050018

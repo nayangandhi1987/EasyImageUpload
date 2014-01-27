@@ -19,7 +19,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.ActionBarActivity;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -35,13 +34,14 @@ import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.jungleeclick.R;
-import com.junglee.init.FeatureHelpScreensHandler;
+import com.junglee.commonlib.utils.StringUtility;
 
 @SuppressLint("NewApi")
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends JungleeActionbarActivity
         implements SearchView.OnQueryTextListener, NavigationDrawerFragment.NavigationDrawerCallbacks, httpCallBack {
 	
 	private static String IDENTIFIER = "MAIN_ACTIVITY";
+	private String UI_STATE = null;
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.
@@ -100,12 +100,6 @@ public class MainActivity extends ActionBarActivity
         });
     }
 
-    @Override
-	protected void onPostResume() {
-		super.onPostResume();
-		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), MainActivity.this);
-	}
-
 	@Override
     public void onNavigationDrawerItemSelected(int position) {
         // update the main content by replacing fragments
@@ -114,9 +108,26 @@ public class MainActivity extends ActionBarActivity
                 .replace(R.id.container, PlaceholderFragment.newInstance(position + 1))
                 .commit();
     }
-	
-	private String getScreenId() {
+
+	@Override
+	protected String getScreenId() {
 		return IDENTIFIER;
+	}
+
+	@Override
+	protected String getUiState() {
+		return UI_STATE;
+	}
+	
+	private void updateUiState(String uiState) {
+		if(StringUtility.isPopulated(uiState)) {
+			boolean stateChanged = !uiState.equalsIgnoreCase(UI_STATE);
+			UI_STATE = uiState;
+
+			if(stateChanged) {
+				onUiStateChanged();
+			}
+		}
 	}
 
     public void onSectionAttached(int number) {
@@ -237,9 +248,15 @@ public class MainActivity extends ActionBarActivity
                 //blah
             }
             restoreActionBar();
+            
+            updateUiState("WITHOUT_NAV_DRAWER");
+            
             return true;
-        }
-        return super.onCreateOptionsMenu(menu);
+        } else {
+        	updateUiState("WITH_NAV_DRAWER");
+        	
+        	return super.onCreateOptionsMenu(menu);
+        }        
     }
 
     @Override

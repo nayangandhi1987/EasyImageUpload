@@ -56,6 +56,12 @@
             android:name="com.junglee.webcontainer.ApiBridgeTestActivity"
             android:label="@string/title_activity_api_bridge_test" >
         </activity>
+        <activity
+            android:name="com.junglee.app.JungleeActivity" >
+        </activity>
+        <activity
+            android:name="com.junglee.app.JungleeActionbarActivity" >
+        </activity>
     </application>
 
 </manifest>

@@ -23,5 +23,7 @@
     <string name="title_activity_splash_screen">SplashScreenActivity</string>
     <string name="title_activity_feature_help_screen">FeatureHelpScreenActivity</string>
     <string name="title_activity_api_bridge_test">ApiBridgeTestActivity</string>
+    <string name="title_activity_junglee">JungleeActivity</string>
+    <string name="title_activity_junglee_actionbar">JungleeActionbarActivity</string>
 
 </resources>

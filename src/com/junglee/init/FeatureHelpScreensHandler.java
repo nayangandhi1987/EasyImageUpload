@@ -60,39 +60,41 @@ public class FeatureHelpScreensHandler {
 		parsePreloadedJson(c);
 	}
 	
-	public JSONObject getHelpScreenData(String scrId) {
-		if(helpScreenParamsDataMap.containsKey(scrId)) {
-			return helpScreenParamsDataMap.get(scrId);
+	public JSONObject getHelpScreenData(String scrIdWithState) {
+		if(StringUtility.isPopulated(scrIdWithState) && helpScreenParamsDataMap.containsKey(scrIdWithState)) {
+			return helpScreenParamsDataMap.get(scrIdWithState);
 		}
 		
 		return null;
 	}
 	
-	public void checkForHelpScreen(final String scrId, final Context c) {
+	public void checkForHelpScreen(final String scrId, final String uiState, final Context c) {
 		if(active) return;
 		
-		final JSONObject helpJson = getHelpScreenData(scrId);
+		final JSONObject helpJson = getHelpScreenData(generateScreeIdWithState(scrId, uiState));
 		if(helpJson != null) {
 			handler.postDelayed(new Runnable() {
 
 				@Override
 				public void run() {
-					invokeHelpScreen(scrId, helpJson, c);
+					invokeHelpScreen(scrId, uiState, helpJson, c);
 				}
-			}, 1000);
+			}, 10);
 			
 		}
 	}
+	
+	
 	
 	public void killedHelpScreen(String helpId) {
 		active = false;
 	}
 	
-	private synchronized void invokeHelpScreen(String scrId, JSONObject helpJson, final Context c) {
+	private synchronized void invokeHelpScreen(final String scrId, final String uiState, final JSONObject helpJson, final Context c) {
 		if(active) return;
 		
 		try {
-			String KEY_HELP_VERSION = scrId+"_"+"HELP_VERSION";
+			String KEY_HELP_VERSION = generateScreeIdWithState(scrId, uiState)+"_HELP_VERSION";
 			int helpVersion = helpJson.getInt("HELP_VERSION");
 			SharedPreferences prefs = c.getSharedPreferences("HELP_SCREENS", Context.MODE_PRIVATE);
 			int lastHelpVersion = prefs.getInt(KEY_HELP_VERSION, 0);
@@ -116,11 +118,25 @@ public class FeatureHelpScreensHandler {
 				}
 
 				if(controls.size() > 0) {
-					String helpId = getHelpId(scrId, helpVersion);
+					int delay = 0;
+					if(helpJson.has("DELAY")) {
+						delay = helpJson.getInt("DELAY");
+					}
+					
+					final String helpId = getHelpId(scrId, helpVersion);
 					IntentData.getInstance().setHelpScreenData(controls, helpId);
-					final Intent i = new Intent(c.getApplicationContext(), FeatureHelpScreenActivity.class);
-					i.putExtra("HELP_ID", helpId);
-					c.startActivity(i);
+					
+					Handler h = new Handler();
+					handler.postDelayed(new Runnable() {
+						@Override
+						public void run() {
+							
+							final Intent i = new Intent(c.getApplicationContext(), FeatureHelpScreenActivity.class);
+							i.putExtra("HELP_ID", helpId);
+							c.startActivity(i);
+						}
+					}, delay);
+					
 					active = true;
 				}
 				
@@ -176,6 +192,11 @@ public class FeatureHelpScreensHandler {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	private String generateScreeIdWithState(String scrId, String uiState) {
+		String state = StringUtility.isBlank(uiState)?"":("_"+uiState);
+		return scrId+state;
 	}
 	
 	private Rect getViewLocationOnScreen(Activity activity, String viewName) {

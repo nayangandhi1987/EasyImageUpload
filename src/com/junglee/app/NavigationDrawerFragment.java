@@ -15,7 +15,6 @@ import android.content.res.Configuration;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.Fragment;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBar;
@@ -28,12 +27,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ExpandableListView;
-import android.widget.ListView;
 
 import com.example.jungleeclick.R;
-import com.junglee.init.FeatureHelpScreensHandler;
 
-;
 
 /**
  * Fragment used for managing interactions for and presentation of a navigation drawer.
@@ -41,9 +37,10 @@ import com.junglee.init.FeatureHelpScreensHandler;
  * design guidelines</a> for a complete explanation of the behaviors implemented here.
  */
 @SuppressLint("NewApi")
-public class NavigationDrawerFragment extends Fragment {
+public class NavigationDrawerFragment extends JungleeFragment {
 	
 	private static String IDENTIFIER = "NAVIGATION_DRAWER_FRAGMENT";
+	private String UI_STATE = null;
 
     /**
      * Remember the position of the selected item.
@@ -264,12 +261,16 @@ public class NavigationDrawerFragment extends Fragment {
     @Override
 	public void onResume() {
 		super.onResume();
-		
-		FeatureHelpScreensHandler.getInstance().checkForHelpScreen(getScreenId(), this.getActivity());
 	}
-    
-    private String getScreenId() {
+
+	@Override
+	protected String getScreenId() {
 		return IDENTIFIER;
+	}
+
+	@Override
+	protected String getUiState() {
+		return UI_STATE;
 	}
 
 	private void selectItem(int position) {

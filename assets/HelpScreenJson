@@ -5,6 +5,7 @@
       "DATA": {
         "HELP_VERSION": 1,
         "DEPENDENCY": [],
+        "DELAY": 100,
         "CONTROLS": [
           {
             "IMG_TYPE": 2,
@@ -19,16 +20,16 @@
             "VIEW_ID": "btn_cam"
           },
           {
-            "IMG_TYPE": 0,
+            "IMG_TYPE": 2,
             "CUSTOM_IMG_ID": "",
             "IMG_CENTRE_AS_REF": false,
             "IMG_PLACEMENT": 0,
             "TXT": "This is a test string - 2",
             "TXT_CLR": "#FFFFFF",
             "TXT_SZ": 18.0,
-            "TXT_RELATIVE_PLACEMENT": 0,
+            "TXT_RELATIVE_PLACEMENT": 1,
             "TEXT_GRAVITY": 17,
-            "VIEW_ID": ""
+            "VIEW_ID": "btn_gallery"
           }
         ]
       }
@@ -55,7 +56,7 @@
       }
     },
     {
-      "SCREEN_ID": "MAIN_ACTIVITY",
+      "SCREEN_ID": "MAIN_ACTIVITY_WITHOUT_NAV_DRAWER",
       "DATA": {
         "HELP_VERSION": 1,
         "DEPENDENCY": [
