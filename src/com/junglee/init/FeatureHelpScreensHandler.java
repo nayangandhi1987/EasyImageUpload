@@ -13,22 +13,20 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.AssetManager;
 import android.graphics.Rect;
 import android.os.Handler;
+import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ListView;
 
-import com.junglee.data.IntentData;
 import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.data.IntentData;
 import com.junglee.utils.UIUtility;
-
-import android.support.v4.app.Fragment;
-import android.support.v7.app.ActionBarActivity;
 
 public class FeatureHelpScreensHandler {
 	private static FeatureHelpScreensHandler instance = null;

@@ -10,4 +10,10 @@
     <item android:title="Local Ad"
         android:showAsAction="always"
         android:id="@+id/action_local_ad"/>
+    <item android:title="FAQs"
+        android:showAsAction="always"
+        android:id="@+id/action_faqs"/>
+    <item android:title="Report Issue"
+        android:showAsAction="always"
+        android:id="@+id/action_report_issue"/>
 </menu>

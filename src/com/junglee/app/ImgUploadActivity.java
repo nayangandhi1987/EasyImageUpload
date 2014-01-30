@@ -23,7 +23,7 @@ import android.widget.TextView;
 
 import com.example.jungleeclick.R;
 import com.junglee.events.GlobalEventID;
-import com.junglee.location.LocationTracker;
+import com.junglee.commonlib.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.settings.AppSettings;
 import com.junglee.commonlib.utils.FileSystemUtility;

@@ -5,9 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-import com.junglee.commonlib.utils.FileSystemUtility;
-import com.junglee.commonlib.utils.StringUtility;
-
 import android.app.Activity;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -20,6 +17,9 @@ import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+
+import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.StringUtility;
 
 public class ImageUtility {
 	

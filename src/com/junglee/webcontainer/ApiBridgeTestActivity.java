@@ -17,6 +17,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.CalendarContract.EventsEntity;
 import android.util.Log;
 import android.view.Menu;
 import android.webkit.WebResourceResponse;
@@ -24,13 +25,16 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.jungleeclick.R;
-import com.junglee.commonlib.apibridge.ApiBridgeController;
+import com.junglee.commonlib.apibridge.ApiBridge;
 import com.junglee.commonlib.apibridge.ApiBridgeHelper;
 import com.junglee.commonlib.apibridge.INameSpace;
-import com.junglee.events.GlobalEventID;
-import com.junglee.location.LocationTracker;
-import com.junglee.utils.GlobalStrings;
+import com.junglee.commonlib.eventengine.ASyncEventHandler;
+import com.junglee.commonlib.eventengine.EventEngine;
+import com.junglee.commonlib.eventengine.SyncEventHandler;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.events.GlobalEventID;
+import com.junglee.commonlib.location.LocationTracker;
+import com.junglee.utils.GlobalStrings;
 
 @SuppressLint("NewApi")
 public class ApiBridgeTestActivity extends Activity implements INameSpace {
@@ -52,7 +56,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 		
 	private String wvLocalResourceSuffix = "_JungleeLocalRscSfx";
 	
-	ApiBridgeController apiController = null;
+	ApiBridge apiController = null;
 	private Handler handler = null;
 
 	@Override
@@ -85,9 +89,23 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
         	}
         });		
 		
-		apiController = new ApiBridgeController(webview);
+		apiController = new ApiBridge(webview);
 		apiController.attachNamespaceHandler(this, "PictureNamespace");
 		apiController.attachNamespaceHandler(this, "LocationNamespace");
+		
+		String anEventType = "Type_X";
+		SyncEventHandler anEventHandler = new SyncEventHandler() {
+			@Override
+			public boolean handle(JSONObject eventData) {
+				Log.i("JungleeClick", "Received an Event 'Type_X' from EventEngine!");
+				return true;
+			}
+		};
+		EventEngine.getInstance().register(anEventType, anEventHandler);
+		EventEngine.getInstance().register(anEventType, anEventHandler);
+		EventEngine.getInstance().register(anEventType, anEventHandler);
+		EventEngine.getInstance().register(anEventType, anEventHandler);
+		EventEngine.getInstance().register(anEventType, anEventHandler);
 		
 		requestCodeToId = new HashMap<Integer, String>();
 		
@@ -144,7 +162,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 	@Override
 	public JSONObject processRequest(String namespace, String apiName,
 			JSONObject request, String requestId,
-			ApiBridgeController controller) {
+			ApiBridge controller) {
 		if(apiName.equalsIgnoreCase("takePicture")) {
 			takePicture(requestId);
 			return ApiBridgeHelper.jsonWithReqInProcess();

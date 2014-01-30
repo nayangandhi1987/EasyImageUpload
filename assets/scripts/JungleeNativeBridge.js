@@ -30,6 +30,19 @@ jungleeNative = {
 
 
 
+
+"raiseEvent": function(eventType, jsonParameter){
+    var jsonPayload = {
+		"type" : eventType,
+		"parameter": jsonParameter
+	}
+	var sData = JSON.stringify(jsonPayload);
+	window.jungleeNativeApp.sendEvent(sData);
+},
+
+
+
+
 // This is for cases where native needs to raise an event for the javascript layer to handle
 "registerJSEventHandler": function(jsNamespace, eventName, fnEventHandler){
 },

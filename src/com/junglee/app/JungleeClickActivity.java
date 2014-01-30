@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ContentValues;
 import android.content.Intent;
@@ -18,8 +17,8 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.jungleeclick.R;
-import com.junglee.events.GlobalEventID;
 import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.events.GlobalEventID;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
 import com.junglee.webcontainer.ApiBridgeTestActivity;

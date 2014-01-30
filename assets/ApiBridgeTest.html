@@ -42,6 +42,10 @@ function wrongMethod(){
 	var jsonParam = {};
 	jungleeNative.execute("PictureNamespace","someFunction", nativeResultHandler, jsonParam);
 }
+function fireEvent(){
+	var jsonParam = {};
+	jungleeNative.raiseEvent("Type_X", jsonParam);
+}
 </script>
 </head>
 
@@ -55,6 +59,7 @@ function wrongMethod(){
     <input type="button" onclick="fetchLocation()" value="Location" />
     <input type="button" onclick="wrongNamespace()" value="WrongNamespace" />
     <input type="button" onclick="wrongMethod()" value="WrongMethod" />
+    <input type="button" onclick="fireEvent()" value="FireEvent" />
   </div>
 
 </body>

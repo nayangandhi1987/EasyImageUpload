@@ -1,4 +1,4 @@
-package com.junglee.location;
+package com.junglee.commonlib.location;
 
 import java.io.IOException;
 import java.util.List;

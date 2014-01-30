@@ -1,6 +1,7 @@
 package com.junglee.app;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import org.json.JSONArray;
@@ -32,6 +33,8 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
+
+import com.helpshift.Helpshift;
 
 import com.example.jungleeclick.R;
 import com.junglee.commonlib.utils.StringUtility;
@@ -72,6 +75,14 @@ public class MainActivity extends JungleeActionbarActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        
+        HashMap config = new HashMap();
+        config.put("enableInAppNotification", true);
+        Helpshift.install(getApplication(), 
+        		"90a52fec54f12903c7ad3a4d05c2c357", 
+        		"nggandhi.helpshift.com", 
+        		"nggandhi_platform_20140128025526433-9d915c5b8d767b1",
+        		config);
 
         mNavigationDrawerFragment = (NavigationDrawerFragment)
                 getSupportFragmentManager().findFragmentById(R.id.navigation_drawer);
@@ -272,6 +283,10 @@ public class MainActivity extends JungleeActionbarActivity
     	if(id == R.id.action_local_ad) {
     		Intent i = new Intent(getApplicationContext(), JungleeClickActivity.class);
         	startActivity(i);
+    	} else if(id == R.id.action_faqs) {
+    		Helpshift.showFAQs(this);
+    	} else if(id == R.id.action_report_issue) {
+    		Helpshift.showConversation(this);
     	}
 
         return super.onOptionsItemSelected(item);
