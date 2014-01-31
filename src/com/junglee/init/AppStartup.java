@@ -4,6 +4,8 @@ package com.junglee.init;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.junglee.commonlib.logging.Logger;
+
 public class AppStartup {
 	public static void performTasks(Context c) {
 		onEachLaunchPre(c); // perform each launch tasks
@@ -24,6 +26,7 @@ public class AppStartup {
 
 	public static void onEachLaunchPre(final Context c) {		
 		// these will run on each launch of the app
+		Logger.initLogger(2);
 	}
 	public static void onEachLaunchPost(final Context c) {		
 		// these will run on each launch of the app

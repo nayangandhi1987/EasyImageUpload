@@ -8,8 +8,7 @@ public class ASyncEventHandler implements EventHandler {
 	@Override
 	public boolean execute(final JSONObject eventData) {
 		Handler h = new Handler();
-		Runnable r = new Runnable() {
-			
+		Runnable r = new Runnable() {			
 			@Override
 			public void run() {
 				handle(eventData);

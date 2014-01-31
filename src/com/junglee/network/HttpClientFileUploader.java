@@ -20,9 +20,10 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import android.util.Log;
+import com.junglee.commonlib.logging.Logger;
 
 public class HttpClientFileUploader {
+	private static final String TAG = "HttpClientFileUploader";
     /**
      * A generic method to execute any type of Http Request and constructs a response object
      * @param requestBase the request that needs to be exeuted
@@ -34,7 +35,7 @@ public class HttpClientFileUploader {
         InputStream responseStream = null ;
         HttpClient client = new DefaultHttpClient () ;
         try{
-        	Log.i("JungleeClick", "Executing request ..");
+        	Logger.info(TAG, "Executing request ..");
             HttpResponse response = client.execute(requestBase) ;
             if (response != null){
                 HttpEntity responseEntity = response.getEntity() ;
@@ -56,18 +57,17 @@ public class HttpClientFileUploader {
                     }
                 }
             }
-            Log.i("JungleeClick", "Request completed !!");
         } catch (UnsupportedEncodingException e) {
-        	Log.i("JungleeClick", "UnsupportedEncodingException");
+        	Logger.exception(TAG, "Request Failed - UnsupportedEncodingException");
             e.printStackTrace();
         } catch (ClientProtocolException e) {
-        	Log.i("JungleeClick", "ClientProtocolException");
+        	Logger.exception(TAG, "Request Failed - ClientProtocolException");
             e.printStackTrace();
         } catch (IllegalStateException e) {
-        	Log.i("JungleeClick", "IllegalStateException");
+        	Logger.exception(TAG, "Request Failed - IllegalStateException");
             e.printStackTrace();
         } catch (IOException e) {
-        	Log.i("JungleeClick", "IOException");
+        	Logger.exception(TAG, "Request Failed - IOException");
             e.printStackTrace();
         }finally{
             if (responseStream != null){
@@ -80,7 +80,7 @@ public class HttpClientFileUploader {
         }
         client.getConnectionManager().shutdown() ;
         
-        Log.i("JungleeClick", "RESPONSE: "+responseString);
+        Logger.info(TAG, "Request Completed - RESPONSE: "+responseString);
  
         return responseString ;
     }
@@ -97,7 +97,7 @@ public class HttpClientFileUploader {
  
         HttpPost postRequest = new HttpPost (urlString);
         try{
-        	Log.i("JungleeClick", "Creating Post Request for FileUpload ..");
+        	Logger.verbose(TAG, "Creating Post Request for FileUpload ..");
             MultipartEntity multiPartEntity = new MultipartEntity () ;
  
             //The usual form parameters can be added this way
@@ -113,7 +113,7 @@ public class HttpClientFileUploader {
             multiPartEntity.addPart("file", fileBody);
  
             postRequest.setEntity(multiPartEntity) ;
-            Log.i("JungleeClick", "Created Post Request for FileUpload !!");
+            Logger.verbose(TAG, "Created Post Request for FileUpload !!");
         }catch (UnsupportedEncodingException ex){
             ex.printStackTrace() ;
         }
@@ -124,11 +124,11 @@ public class HttpClientFileUploader {
     private String getMimeTypeForFile(File file) {
     	if(file!=null) {
     		String path = file.getAbsolutePath();
-    		Log.i("JungleeClick", "Filepath: "+path);
+    		Logger.verbose(TAG, "Filepath: "+path);
     		String[] parts = path.split("/");
     		if(parts.length > 0) {
     			String filename = parts[parts.length-1];
-    			Log.i("JungleeClick", "Filename: "+filename);
+    			Logger.verbose(TAG, "Filename: "+filename);
     			filename = filename.toLowerCase();
     			if(filename.endsWith("jpg") || filename.endsWith("jpeg"))
     				return "image/jpeg";

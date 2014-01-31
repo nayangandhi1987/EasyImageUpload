@@ -15,7 +15,10 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+import com.junglee.commonlib.logging.Logger;
+
 public class AsyncHttpClientFileUploader {
+	private static final String TAG = "AsyncHttpClientFileUploader";
 	private static AsyncHttpClient client = new AsyncHttpClient();
 	
 	private Handler eventHandler = null;
@@ -39,37 +42,36 @@ public class AsyncHttpClientFileUploader {
 		post(url, params,  new AsyncHttpResponseHandler() {
 			@Override
 			public void onStart() {
-				Log.i("JungleeClick", "Upload Started !!");
+				Logger.info(TAG, "Upload Started !!");
 				sendMsgToHandler(GlobalEventID.UPLOAD_STARTED);
 			}
 
 			@Override
 			public void onSuccess(int statusCode, Header[] headers, byte[] responseBody) {
-				Log.i("JungleeClick", "Upload Succeeded : StatusCode="+statusCode);
+				Logger.info(TAG, "Upload Succeeded : StatusCode="+statusCode);
 				sendMsgToHandler(GlobalEventID.UPLOAD_SUCCEEDED);
 			}
 
 			@Override
 			public void onFailure(int statusCode, Header[] headers, byte[] responseBody, Throwable error)
 			{
-				Log.i("JungleeClick", "Upload Failed : StatusCode="+statusCode);
-				Log.i("JungleeClick", "Upload Failed : ResponseBody="+responseBody);
+				Logger.info(TAG, "Upload Failed : StatusCode="+statusCode+", ResponseBody="+responseBody);
 				sendMsgToHandler(GlobalEventID.UPLOAD_FAILED);
 			}
 
 			@Override
 			public void onRetry() {
-				Log.i("JungleeClick", "Upload Retried !!");
+				Logger.info(TAG, "Upload Retried !!");
 			}
 
 			@Override
 			public void onProgress(int bytesWritten, int totalSize) {
-				Log.i("JungleeClick", "Upload In Progress !!");
+				Logger.info(TAG, "Upload In Progress !!");
 			}
 
 			@Override
 			public void onFinish() {
-				Log.i("JungleeClick", "Upload Finished !!");
+				Logger.info(TAG, "Upload Finished !!");
 			}
 			
 			private void sendMsgToHandler(int msgId) {

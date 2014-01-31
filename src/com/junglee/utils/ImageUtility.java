@@ -16,14 +16,14 @@ import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.util.Log;
+
+import com.junglee.commonlib.logging.Logger;
 
 import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.commonlib.utils.StringUtility;
 
-public class ImageUtility {
-	
-	private static String TAG = "JungleeClick";	
+public class ImageUtility {	
+	private static final String TAG = "ImageUtility";	
 	
 	private static final int TEMP_STORAGE_SIZE_FOR_COMPRESSION = 16 * 1024;
 	
@@ -67,7 +67,7 @@ public class ImageUtility {
 	}
 	
 	public static String compressImage(String filepath, CompressionQuality quality) {
-		Log.i(TAG, "Compress Image => " + filepath);
+		Logger.info(TAG, "Compress Image => " + filepath);
 		 
         Bitmap scaledBitmap = null;
  
@@ -100,7 +100,7 @@ public class ImageUtility {
 		}
 				
 		options.inSampleSize = calculateInSampleSize(options.outWidth, options.outHeight, width, height);
-		Log.i(TAG,  "SampleSize: "+options.inSampleSize);
+		Logger.info(TAG,  "SampleSize: "+options.inSampleSize);
  
 //      inJustDecodeBounds set to false to load the actual bitmap
         options.inJustDecodeBounds = false;
@@ -145,17 +145,14 @@ public class ImageUtility {
  
             int orientation = exif.getAttributeInt(
                     ExifInterface.TAG_ORIENTATION, 0);
-            Log.i(TAG, "Exif: " + orientation);
+            Logger.info(TAG, "Exif", "Orientation="+orientation);
             Matrix matrix = new Matrix();
             if (orientation == 6) {
                 matrix.postRotate(90);
-                Log.i(TAG, "Exif: " + orientation);
             } else if (orientation == 3) {
                 matrix.postRotate(180);
-                Log.i(TAG, "Exif: " + orientation);
             } else if (orientation == 8) {
                 matrix.postRotate(270);
-                Log.i(TAG, "Exif: " + orientation);
             }
             scaledBitmap = Bitmap.createBitmap(scaledBitmap, 0, 0,
                     scaledBitmap.getWidth(), scaledBitmap.getHeight(), matrix,

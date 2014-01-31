@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.junglee.commonlib.logging.Logger;
+
 public class UIUtility {
+	private static final String TAG = "UIUtility";
 	
 	private static int ACTION_BAR_HEIGHT = 0;
 	private static int STATUS_BAR_HEIGHT = 0;
@@ -62,7 +64,7 @@ public class UIUtility {
 			window.getDecorView().getWindowVisibleDisplayFrame(rectangle);
 			STATUS_BAR_HEIGHT = rectangle.top;
 		}		
-		Log.i("JungleeCLick", "STATUS_BAR_HEIGHT="+STATUS_BAR_HEIGHT);
+		Logger.info(TAG, "STATUS_BAR_HEIGHT="+STATUS_BAR_HEIGHT);
 		return STATUS_BAR_HEIGHT;		
 	}
 	public static int getCalculatedStatusbarHeight() {

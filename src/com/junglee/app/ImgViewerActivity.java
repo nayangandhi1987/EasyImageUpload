@@ -8,7 +8,6 @@ import ru.truba.touchgallery.GalleryWidget.GalleryViewPager;
 import ru.truba.touchgallery.GalleryWidget.UrlPagerAdapter;
 import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 
 import com.example.jungleeclick.R;
@@ -24,7 +23,6 @@ public class ImgViewerActivity extends Activity {
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
             urlsString = extras.getString("urls");
-            Log.i("JungleeClick", urlsString);
         }
         
         String[] urls = urlsString.split("#");

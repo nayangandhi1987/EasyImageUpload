@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.util.Log;
 import android.view.Menu;
 import android.webkit.ConsoleMessage;
 import android.webkit.JavascriptInterface;
@@ -24,7 +23,11 @@ import com.example.jungleeclick.R;
 import com.junglee.commonlib.utils.StringUtility;
 import com.junglee.utils.GlobalStrings;
 
+import com.junglee.commonlib.logging.Logger;
+
 public class JungleeWebContainerActivity extends Activity {
+	private static final String TAG = "JungleeWebContainerActivity";
+	
 	private WebView webview = null;
 	private JavaScriptInterface jsItfObj = new JavaScriptInterface();
 	
@@ -38,7 +41,7 @@ public class JungleeWebContainerActivity extends Activity {
     {
 		@JavascriptInterface
 		public void invokeCamera() {
-			Log.i("JungleeClick", "invokeCamera() Called!");			
+			Logger.verbose(TAG, "invokeCamera() Called!");			
 
 	    	//define the file-name to save photo taken by Camera activity
 	    	String fileName = "junglee_cam_picture_" + String.valueOf(System.currentTimeMillis());
@@ -60,7 +63,7 @@ public class JungleeWebContainerActivity extends Activity {
 		
 		@JavascriptInterface
 		public void renderHighQualityImg() {
-			Log.i("JungleeClick", "renderHighQualityImg() Called!");			
+			Logger.verbose(TAG, "renderHighQualityImg() Called!");			
 
 			JungleeWebContainerActivity.this.runOnUiThread(new Runnable() {
 				public void run() {
@@ -71,7 +74,7 @@ public class JungleeWebContainerActivity extends Activity {
 		
 		@JavascriptInterface
 		public void renderMediumQualityImg() {
-			Log.i("JungleeClick", "renderMediumQualityImg() Called!");
+			Logger.verbose(TAG, "renderMediumQualityImg() Called!");
 
 			JungleeWebContainerActivity.this.runOnUiThread(new Runnable() {
 				public void run() {
@@ -82,7 +85,7 @@ public class JungleeWebContainerActivity extends Activity {
 		
 		@JavascriptInterface
 		public void renderLowQualityImg() {
-			Log.i("JungleeClick", "renderLowQualityImg() Called!");
+			Logger.verbose(TAG, "renderLowQualityImg() Called!");
 
 			JungleeWebContainerActivity.this.runOnUiThread(new Runnable() {
 				public void run() {
@@ -122,8 +125,12 @@ public class JungleeWebContainerActivity extends Activity {
 
             public boolean onConsoleMessage(ConsoleMessage cm)
             {
-                Log.i("JungleeClick", "Console:-- " + cm.message() + " -- From line " + cm.lineNumber()
-                        + " of -- " + cm.sourceId());
+                Logger.info(TAG, "Console Log", 
+                		String.format("%s -- (from line# %d of source# %s)", 
+                				cm.message(), 
+                				cm.lineNumber(), 
+                				cm.sourceId()));
+  
                 return true;
             }
         });

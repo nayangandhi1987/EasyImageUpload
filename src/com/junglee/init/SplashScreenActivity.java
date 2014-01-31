@@ -31,7 +31,6 @@ public class SplashScreenActivity extends Activity {
 
 	private void gotoNextStep() {
 		handler.postDelayed(new Runnable() {
-
 			@Override
 			public void run() {
 				Intent intent = null;

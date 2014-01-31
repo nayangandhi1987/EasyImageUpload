@@ -17,7 +17,9 @@ import android.view.View;
 import android.widget.Button;
 
 import com.example.jungleeclick.R;
+import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.events.GlobalEventID;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.ImageUtility;
@@ -228,8 +230,7 @@ public class JungleeClickActivity extends JungleeActivity {
 		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.COMPRESSION_COMPLETED));
 		    }
 		};
-		Thread thread = new Thread(runnable);
-        thread.start();
+		ThreadUtility.executeInBackground(runnable);
     }
     
     private void showCompressedImgs() {

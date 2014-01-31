@@ -10,6 +10,7 @@ import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
@@ -17,8 +18,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.provider.CalendarContract.EventsEntity;
-import android.util.Log;
 import android.view.Menu;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
@@ -28,10 +27,10 @@ import com.example.jungleeclick.R;
 import com.junglee.commonlib.apibridge.ApiBridge;
 import com.junglee.commonlib.apibridge.ApiBridgeHelper;
 import com.junglee.commonlib.apibridge.INameSpace;
-import com.junglee.commonlib.eventengine.ASyncEventHandler;
 import com.junglee.commonlib.eventengine.EventEngine;
-import com.junglee.commonlib.eventengine.SyncEventHandler;
+import com.junglee.commonlib.eventengine.MnThreadSyncEventHandler;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.events.GlobalEventID;
 import com.junglee.commonlib.location.LocationTracker;
 import com.junglee.utils.GlobalStrings;
@@ -94,17 +93,17 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 		apiController.attachNamespaceHandler(this, "LocationNamespace");
 		
 		String anEventType = "Type_X";
-		SyncEventHandler anEventHandler = new SyncEventHandler() {
+		MnThreadSyncEventHandler anEventHandler = new MnThreadSyncEventHandler(this) {
 			@Override
 			public boolean handle(JSONObject eventData) {
-				Log.i("JungleeClick", "Received an Event 'Type_X' from EventEngine!");
+				AlertDialog.Builder builder = new AlertDialog.Builder(ApiBridgeTestActivity.this);
+				builder.setMessage("Received event 'Type_X' from Event Engine!");
+				builder.setCancelable(true);
+				AlertDialog alert11 = builder.create();
+				alert11.show();
 				return true;
 			}
 		};
-		EventEngine.getInstance().register(anEventType, anEventHandler);
-		EventEngine.getInstance().register(anEventType, anEventHandler);
-		EventEngine.getInstance().register(anEventType, anEventHandler);
-		EventEngine.getInstance().register(anEventType, anEventHandler);
 		EventEngine.getInstance().register(anEventType, anEventHandler);
 		
 		requestCodeToId = new HashMap<Integer, String>();
@@ -213,7 +212,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 	}
 	
 	private void fetchLocation(final String requestId) {
-		Runnable runnable = new Runnable()
+		ThreadUtility.executeInBackground(new Runnable()
 		{
 		    @Override
 		    public void run()
@@ -229,9 +228,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 		    	msgObj.setData(b);
 		    	handler.sendMessage(msgObj);		           
 		    }
-		};
-		Thread thread = new Thread(runnable);
-        thread.start();
+		});
 	}
 	
 	@Override

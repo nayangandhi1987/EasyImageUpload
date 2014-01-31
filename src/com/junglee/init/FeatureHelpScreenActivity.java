@@ -67,11 +67,9 @@ public class FeatureHelpScreenActivity extends Activity {
 
 	    int screenHeight=metrics.heightPixels;
 	    int screenWidth=metrics.widthPixels;
-	    Log.i("JungleeClick", "screenWidth="+screenWidth+", screenHeight="+screenHeight);
 	    
 		for(int i = 0; i < controls.size(); ++i) {
 			HelpScreenUIControlParams control = controls.get(i);
-			Log.i("JungleeClick", control.toString());			
 			
 			ImageView imgView = createImgView(getRscIdForGesture(control.imgType, control.customImgId));
 			TextView txtView = createTxtView(control.text, control.textColor, control.textSize);

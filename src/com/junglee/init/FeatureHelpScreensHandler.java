@@ -72,7 +72,6 @@ public class FeatureHelpScreensHandler {
 		final JSONObject helpJson = getHelpScreenData(generateScreeIdWithState(scrId, uiState));
 		if(helpJson != null) {
 			handler.postDelayed(new Runnable() {
-
 				@Override
 				public void run() {
 					invokeHelpScreen(scrId, uiState, helpJson, c);
@@ -127,8 +126,7 @@ public class FeatureHelpScreensHandler {
 					Handler h = new Handler();
 					handler.postDelayed(new Runnable() {
 						@Override
-						public void run() {
-							
+						public void run() {							
 							final Intent i = new Intent(c.getApplicationContext(), FeatureHelpScreenActivity.class);
 							i.putExtra("HELP_ID", helpId);
 							c.startActivity(i);

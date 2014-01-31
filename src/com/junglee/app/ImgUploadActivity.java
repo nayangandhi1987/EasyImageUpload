@@ -27,6 +27,7 @@ import com.junglee.commonlib.location.LocationTracker;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.settings.AppSettings;
 import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.UIUtility;
 
@@ -160,7 +161,7 @@ public class ImgUploadActivity extends Activity {
 	private void refreshLocation() {
 		
     	
-    	Runnable runnable = new Runnable()
+    	ThreadUtility.executeInBackground(new Runnable()
 		{
 		    @Override
 		    public void run()
@@ -175,9 +176,7 @@ public class ImgUploadActivity extends Activity {
 		    	msgObj.setData(b);
 		    	handler.sendMessage(msgObj);		           
 		    }
-		};
-		Thread thread = new Thread(runnable);
-        thread.start();
+		});
 	}
 	
 	

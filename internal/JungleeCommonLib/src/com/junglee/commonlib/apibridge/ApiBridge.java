@@ -21,9 +21,11 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.junglee.commonlib.eventengine.EventEngine;
+import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.StringUtility;
 
 public class ApiBridge {
+	private static final String TAG = "ApiBridge";
 	
 	private static String DEFAULT_NATIVE_JS_OBJECT_NAME = "jungleeNativeApp";
 	private static String DEFAULT_JS_CONTROLLER_FNNAME = "jungleeNative.__callback";
@@ -70,8 +72,11 @@ public class ApiBridge {
 
 	            public boolean onConsoleMessage(ConsoleMessage cm)
 	            {
-	                Log.i("ApiBridgeController", "Console:-- " + cm.message() + " -- From line " + cm.lineNumber()
-	                        + " of -- " + cm.sourceId());
+	            	Logger.info(TAG, "Console Log", 
+	                		String.format("%s -- (from line# %d of source# %s)", 
+	                				cm.message(), 
+	                				cm.lineNumber(), 
+	                				cm.sourceId()));
 	                return true;
 	            }
 	        });
@@ -133,13 +138,12 @@ public class ApiBridge {
 	
 	@JavascriptInterface
 	public void jsHello() {
-		Log.i("JungleeClick", "Hello from Javascript");
+		Logger.info(TAG, "Hello from Javascript");
 	}
 	@JavascriptInterface
 	public void processRequest(final String requestId, final String request){
-		Log.i("JungleeClick", "Process Request from Javascript");
 		try {
-			Log.i("JungleeClick", "Process Request: requestId="+requestId+", request="+request);
+			Logger.info(TAG, "Process Request: requestId="+requestId+", request="+request);
 			JSONObject jsonReq = new JSONObject(request);
 			String desiredNamespace = jsonReq.getString(MSG_TYPE_ATTRIBUTE_NAMESPACE);
 			String desiredMethod = jsonReq.getString(MSG_TYPE_ATTRIBUTE_METHOD);
@@ -175,10 +179,10 @@ public class ApiBridge {
 	}
 	
 	@JavascriptInterface	
-	public void sendEvent(String event) {
-		Log.i("JungleeClick", "sendEvent: "+event);
+	public void sendEvent(String event) {		
 		JSONObject eventJson;
 		try {
+			Logger.info(TAG, "sendEvent: "+event);
 			eventJson = new JSONObject(event);
 			String eventType = eventJson.getString(EVENT_TYPE_ATTRIBUTE_TYPE);
 			JSONObject eventData = eventJson.getJSONObject(EVENT_TYPE_ATTRIBUTE_PARAMAETER);

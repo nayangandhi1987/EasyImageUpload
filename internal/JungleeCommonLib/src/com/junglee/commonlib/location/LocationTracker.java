@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
+import com.junglee.commonlib.logging.Logger;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +20,8 @@ import android.os.IBinder;
 import android.provider.Settings;
 import android.util.Log;
 
-public class LocationTracker implements LocationListener{
+public class LocationTracker implements LocationListener {
+	private static final String TAG = "LocationTracker";
 	private Context context = null;
 	private boolean listenToUpdates = false;
 	 
@@ -76,7 +79,7 @@ public class LocationTracker implements LocationListener{
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             
-            Log.i("JungleeClick", "GPS_ENABLED:"+isGPSEnabled+"		NTWRK_ENABLED:"+isNetworkEnabled);
+            Logger.info(TAG, "GPS_ENABLED:"+isGPSEnabled+"		NTWRK_ENABLED:"+isNetworkEnabled);
  
             
             if (!isGPSEnabled && !isNetworkEnabled) {

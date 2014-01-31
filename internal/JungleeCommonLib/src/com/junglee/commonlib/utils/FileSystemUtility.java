@@ -15,11 +15,14 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
+import com.junglee.commonlib.logging.Logger;
+
 import android.content.Context;
 import android.content.res.AssetManager;
 import android.util.Log;
 
 public class FileSystemUtility {
+	private static final String TAG = "FileSystemUtility";
 	
 	private static final int KB = 1024;
 	private static final int MB = 1024 * 1024;
@@ -50,7 +53,7 @@ public class FileSystemUtility {
 	}
 	
 	public static void copyFile(String fileSrc, String fileDst) throws IOException {
-    	Log.i("JungleeClick", "Copy File " + fileSrc + " => " + fileDst);
+    	Logger.debug(TAG, "Copying File: " + fileSrc + " => " + fileDst);
     	File src = new File(fileSrc);
     	File dst = new File(fileDst);
     	
@@ -70,7 +73,7 @@ public class FileSystemUtility {
         }
         in.close();
         out.close();
-        Log.i("JungleeClick", "Copied To => " + fileDst);
+        Logger.verbose(TAG, "Copied To => " + fileDst);
     }
 	
 	String readFileContent(String fileName) {
