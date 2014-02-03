@@ -15,11 +15,10 @@ import java.util.Map;
 
 import org.json.JSONObject;
 
-import com.junglee.commonlib.logging.Logger;
-
 import android.content.Context;
 import android.content.res.AssetManager;
-import android.util.Log;
+
+import com.junglee.commonlib.logging.Logger;
 
 public class FileSystemUtility {
 	private static final String TAG = "FileSystemUtility";
@@ -27,6 +26,14 @@ public class FileSystemUtility {
 	private static final int KB = 1024;
 	private static final int MB = 1024 * 1024;
 	private static final int GB = 1024 * 1024 *1024;
+	
+	
+	public static boolean exists(String filepath) {
+		if(StringUtility.isBlank(filepath)) return false;
+		
+		File file = new File(filepath);
+		return file.exists();     
+	}
 	
 	public static String extractFilenameWithExtn(String filepath) {
 		return extractFilename(filepath, true);

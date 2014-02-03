@@ -22,12 +22,13 @@ import android.widget.RadioGroup.OnCheckedChangeListener;
 import android.widget.TextView;
 
 import com.example.jungleeclick.R;
-import com.junglee.events.GlobalEventID;
 import com.junglee.commonlib.location.LocationTracker;
+import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.LibraryGlobalConstants;
+import com.junglee.commonlib.utils.ThreadUtility;
+import com.junglee.events.GlobalEventID;
 import com.junglee.network.AsyncHttpClientFileUploader;
 import com.junglee.settings.AppSettings;
-import com.junglee.commonlib.utils.FileSystemUtility;
-import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.utils.GlobalStrings;
 import com.junglee.utils.UIUtility;
 
@@ -59,9 +60,12 @@ public class ImgUploadActivity extends Activity {
 		
         Bundle extras = getIntent().getExtras();
         if (extras != null) {
-        	qualityToImgPath.put("HIGH", extras.getString("HIGH"));
-        	qualityToImgPath.put("MEDIUM", extras.getString("MEDIUM"));
-        	qualityToImgPath.put("LOW", extras.getString("LOW"));
+        	qualityToImgPath.put(LibraryGlobalConstants.KEY_HIGH_COMPRESSION_QUALITY, 
+        			extras.getString(LibraryGlobalConstants.KEY_HIGH_COMPRESSION_QUALITY));
+        	qualityToImgPath.put(LibraryGlobalConstants.KEY_MEDIUM_COMPRESSION_QUALITY, 
+        			extras.getString(LibraryGlobalConstants.KEY_MEDIUM_COMPRESSION_QUALITY));
+        	qualityToImgPath.put(LibraryGlobalConstants.KEY_LOW_COMPRESSION_QUALITY, 
+        			extras.getString(LibraryGlobalConstants.KEY_LOW_COMPRESSION_QUALITY));
         }
         
 		
@@ -139,11 +143,11 @@ public class ImgUploadActivity extends Activity {
 	private void reloadPicture() {
 		String imgPath = null;
 		if(radioHigh.isChecked()) {
-			imgPath = qualityToImgPath.get("HIGH");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_HIGH_COMPRESSION_QUALITY);
 		} else if(radioMedium.isChecked()) {
-			imgPath = qualityToImgPath.get("MEDIUM");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_MEDIUM_COMPRESSION_QUALITY);
 		} else if(radioLow.isChecked()) {
-			imgPath = qualityToImgPath.get("LOW");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_LOW_COMPRESSION_QUALITY);
 		}
 		
 		try {
@@ -183,11 +187,11 @@ public class ImgUploadActivity extends Activity {
 	private void uploadPicture() {
 		String imgPath = null;
 		if(radioHigh.isChecked()) {
-			imgPath = qualityToImgPath.get("HIGH");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_HIGH_COMPRESSION_QUALITY);
 		} else if(radioMedium.isChecked()) {
-			imgPath = qualityToImgPath.get("MEDIUM");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_MEDIUM_COMPRESSION_QUALITY);
 		} else if(radioLow.isChecked()) {
-			imgPath = qualityToImgPath.get("LOW");
+			imgPath = qualityToImgPath.get(LibraryGlobalConstants.KEY_LOW_COMPRESSION_QUALITY);
 		}
 		
 		final String imgToUpload = imgPath;

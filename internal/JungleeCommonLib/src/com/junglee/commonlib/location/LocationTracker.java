@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Locale;
 
-import com.junglee.commonlib.logging.Logger;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,7 +16,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
-import android.util.Log;
+
+import com.junglee.commonlib.logging.Logger;
 
 public class LocationTracker implements LocationListener {
 	private static final String TAG = "LocationTracker";
@@ -79,7 +78,7 @@ public class LocationTracker implements LocationListener {
             isNetworkEnabled = locationManager
                     .isProviderEnabled(LocationManager.NETWORK_PROVIDER);
             
-            Logger.info(TAG, "GPS_ENABLED:"+isGPSEnabled+"		NTWRK_ENABLED:"+isNetworkEnabled);
+            Logger.info(TAG, "GPS_ENABLED:"+isGPSEnabled+", NTWRK_ENABLED:"+isNetworkEnabled);
  
             
             if (!isGPSEnabled && !isNetworkEnabled) {
@@ -164,9 +163,9 @@ public class LocationTracker implements LocationListener {
     	
     	if(location == null) return locationString;
     	
-    	Geocoder myLocation = new Geocoder(context.getApplicationContext(), Locale.getDefault());   
+    	Geocoder geocoder = new Geocoder(context.getApplicationContext(), Locale.getDefault());   
     	try {
-			List<Address> myList = myLocation.getFromLocation(getLatitude(), getLongitude(), 1);
+			List<Address> myList = geocoder.getFromLocation(getLatitude(), getLongitude(), 1);
 			if(myList.size() > 0) {
 				Address addr = myList.get(0);
 				String locality = addr.getLocality();
@@ -184,6 +183,25 @@ public class LocationTracker implements LocationListener {
 		}
     	
     	return locationString;
+    }
+    
+    public String getCity() {
+    	String cityString = null;
+    	
+    	if(location == null) return cityString;
+    	
+    	Geocoder geocoder = new Geocoder(context.getApplicationContext(), Locale.getDefault());   
+    	try {
+			List<Address> myList = geocoder.getFromLocation(getLatitude(), getLongitude(), 1);
+			if(myList.size() > 0) {
+				Address addr = myList.get(0);
+				cityString = addr.getLocality();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+    	
+    	return cityString;
     }
     
     public void showSettingsAlert(){

@@ -8,14 +8,12 @@ import org.apache.http.Header;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 
+import com.junglee.commonlib.logging.Logger;
 import com.junglee.events.GlobalEventID;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
-
-import com.junglee.commonlib.logging.Logger;
 
 public class AsyncHttpClientFileUploader {
 	private static final String TAG = "AsyncHttpClientFileUploader";

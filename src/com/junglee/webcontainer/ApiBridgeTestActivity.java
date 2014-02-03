@@ -29,11 +29,11 @@ import com.junglee.commonlib.apibridge.ApiBridgeHelper;
 import com.junglee.commonlib.apibridge.INameSpace;
 import com.junglee.commonlib.eventengine.EventEngine;
 import com.junglee.commonlib.eventengine.MnThreadSyncEventHandler;
+import com.junglee.commonlib.location.LocationTracker;
+import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
 import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.events.GlobalEventID;
-import com.junglee.commonlib.location.LocationTracker;
-import com.junglee.utils.GlobalStrings;
 
 @SuppressLint("NewApi")
 public class ApiBridgeTestActivity extends Activity implements INameSpace {
@@ -189,7 +189,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
     	//create parameters for Intent with filename
     	ContentValues values = new ContentValues();
     	values.put(MediaStore.Images.Media.TITLE, fileName);
-    	values.put(MediaStore.Images.Media.DESCRIPTION, GlobalStrings.CAPTURED_IMG_DESC);
+    	values.put(MediaStore.Images.Media.DESCRIPTION, LibraryGlobalStrings.CAPTURED_IMG_DESC);
     	//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
     	
     	imageUri = getContentResolver().insert(

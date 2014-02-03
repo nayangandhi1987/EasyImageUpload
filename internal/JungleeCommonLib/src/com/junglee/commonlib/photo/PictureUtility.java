@@ -1,11 +1,15 @@
-package com.junglee.utils;
+package com.junglee.commonlib.photo;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.HashMap;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -18,11 +22,12 @@ import android.os.Environment;
 import android.provider.MediaStore;
 
 import com.junglee.commonlib.logging.Logger;
-
 import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.utils.LibraryGlobalConstants;
+import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
 
-public class ImageUtility {	
+public class PictureUtility {	
 	private static final String TAG = "ImageUtility";	
 	
 	private static final int TEMP_STORAGE_SIZE_FOR_COMPRESSION = 16 * 1024;
@@ -31,9 +36,22 @@ public class ImageUtility {
 	private static final int MEDIUM_COMPRESSION_QUALITY_VALUE = 60;
 	private static final int LOW_COMPRESSION_QUALITY_VALUE = 20;
 	
+	private static final String FILE_NAME_TEMPLATE = "junglee_cam_picture_<time-stamp>";
+	private static Uri CAMERA_PICTURE_URI = null;
+	
 	private static String COMPRESSED_IMG_SUFFIX_TEMPLATE = "reduced_<quality>";
 	
 	private static String COMPRESSED_IMGS_TARGET_DIR = "JungleeClick/CompressedImages";
+	
+	private static final float MAX_CMPRS_WIDTH_PORTRAIT = 612.0f;
+	private static final float MAX_CMPRS_WIDTH_LANDSCAPE = 816.0f;
+	private static final float MAX_CMPRS_HEIGHT_PORTRAIT = 816.0f;
+	private static final float MAX_CMPRS_HEIGHT_LANDSCAPE = 612.0f;
+	
+	private static final String COMPRESSION_SUFFIX_HIGH_QUALITY = "high";
+	private static final String COMPRESSION_SUFFIX_MEDIUM_QUALITY = "medium";
+	private static final String COMPRESSION_SUFFIX_LOW_QUALITY = "low";
+	private static final String COMPRESSION_SUFFIX_UNKNOWN_QUALITY = "unknown";
 	
 	public enum CompressionQuality {
 		HIGH,
@@ -43,6 +61,29 @@ public class ImageUtility {
 	
 	
 	
+	public static void clearPreviousCompressedImages() {
+		File dir = new File(getCompressionTargetDir());
+	    if (dir.exists()) {
+	    	FileSystemUtility.deleteDirectoryContents(dir);
+	    }
+	}
+	
+	public static Intent createCameraIntent(Context c) {
+		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+    	intent.putExtra(MediaStore.EXTRA_OUTPUT, generateUriForCameraPicture(c));
+    	intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
+    	
+    	return intent;
+	}
+	public static Uri getLastCameraPictureUri() {
+		return CAMERA_PICTURE_URI;
+	}
+	public static Intent createGalleryIntent() {
+		Intent intent = new Intent(Intent.ACTION_PICK);
+		intent.setType("image/*");
+    	
+    	return intent;
+	}
 	
 	public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		if(imageUri == null) return null;
@@ -62,10 +103,6 @@ public class ImageUtility {
 		return null;
 	}
 	
-	public static String compressImage(String filepath) {
-		return compressImage(filepath, CompressionQuality.HIGH);
-	}
-	
 	public static String compressImage(String filepath, CompressionQuality quality) {
 		Logger.info(TAG, "Compress Image => " + filepath);
 		 
@@ -80,8 +117,8 @@ public class ImageUtility {
  
         int height = options.outHeight;
 		int width = options.outWidth;
-		float maxHeight = 816.0f;
-		float maxWidth = 612.0f;
+		float maxHeight = (height>width)?MAX_CMPRS_HEIGHT_PORTRAIT:MAX_CMPRS_HEIGHT_LANDSCAPE;
+		float maxWidth = (width<height)?MAX_CMPRS_WIDTH_PORTRAIT:MAX_CMPRS_WIDTH_LANDSCAPE;
 		float imgRatio = (float)width / (float)height;
 		float maxRatio = maxWidth / maxHeight;
 
@@ -194,6 +231,17 @@ public class ImageUtility {
         return targetFilepath;
  
     }
+	public static HashMap<String, String> compressImageToVariousSizes(String filepath) {
+		if(FileSystemUtility.exists(filepath)) {
+			HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
+			qualityToImgPath.put(LibraryGlobalConstants.KEY_HIGH_COMPRESSION_QUALITY, compressImage(filepath, CompressionQuality.HIGH));
+			qualityToImgPath.put(LibraryGlobalConstants.KEY_MEDIUM_COMPRESSION_QUALITY, compressImage(filepath, CompressionQuality.MEDIUM));
+			qualityToImgPath.put(LibraryGlobalConstants.KEY_LOW_COMPRESSION_QUALITY, compressImage(filepath, CompressionQuality.LOW));
+			return qualityToImgPath;
+		}
+
+		return null;
+	}
 	
 	public static String getCompressionTargetDir()
 	{
@@ -207,26 +255,25 @@ public class ImageUtility {
 		
 		return pathBuilder.toString();
 	}
+	
 	private static String getCompressionSuffix(CompressionQuality quality) {
-		String suffixParam = "unknown";
+		String suffixParam = COMPRESSION_SUFFIX_UNKNOWN_QUALITY;
 
 		switch(quality) {
 		case HIGH:
-			suffixParam = "high";
+			suffixParam = COMPRESSION_SUFFIX_HIGH_QUALITY;
 			break;
 		case MEDIUM:
-			suffixParam = "medium";
+			suffixParam = COMPRESSION_SUFFIX_MEDIUM_QUALITY;
 			break;
 		case LOW:
-			suffixParam = "low";
+			suffixParam = COMPRESSION_SUFFIX_LOW_QUALITY;
 			break;
 		}
 		
 		return COMPRESSED_IMG_SUFFIX_TEMPLATE.replace("<quality>", suffixParam);
 	}
-	private static String getCompressedImgTargetPath(String name) {
-	    return getCompressedImgTargetPath(name, null);	 
-	}
+	
 	private static String getCompressedImgTargetPath(String name, String suffix) {
 	    File dir = new File(getCompressionTargetDir());
 	    if (!dir.exists()) {
@@ -251,6 +298,20 @@ public class ImageUtility {
 	 
 	}
 	
+	private static Uri generateUriForCameraPicture(Context c) {
+		String fileName = FILE_NAME_TEMPLATE.replaceFirst("<time-stamp>", String.valueOf(System.currentTimeMillis()));
+    	//create parameters for Intent with filename
+    	ContentValues values = new ContentValues();
+    	values.put(MediaStore.Images.Media.TITLE, fileName);
+    	values.put(MediaStore.Images.Media.DESCRIPTION, LibraryGlobalStrings.CAPTURED_IMG_DESC);
+    	//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
+    	
+    	CAMERA_PICTURE_URI = c.getContentResolver().insert(
+    	        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+    	
+    	return CAMERA_PICTURE_URI;
+	}
+	
 	private static int calculateInSampleSize(int actualWidth, int actualHeight, int reqWidth, int reqHeight) {
 	    int inSampleSize = 1;
 	 
@@ -267,12 +328,5 @@ public class ImageUtility {
 	    }
 	 
 	    return inSampleSize;
-	}
-
-	public static void clearCompressedImages() {
-		File dir = new File(getCompressionTargetDir());
-	    if (dir.exists()) {
-	    	FileSystemUtility.deleteDirectoryContents(dir);
-	    }
 	}
 }

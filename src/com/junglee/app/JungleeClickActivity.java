@@ -5,24 +5,20 @@ import java.util.HashMap;
 import java.util.Map.Entry;
 
 import android.app.ProgressDialog;
-import android.content.ContentValues;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 
 import com.example.jungleeclick.R;
-import com.junglee.commonlib.logging.Logger;
-import com.junglee.commonlib.utils.FileSystemUtility;
+import com.junglee.commonlib.photo.PictureUtility;
 import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.events.GlobalEventID;
 import com.junglee.utils.GlobalStrings;
-import com.junglee.utils.ImageUtility;
 import com.junglee.webcontainer.ApiBridgeTestActivity;
 
 public class JungleeClickActivity extends JungleeActivity {
@@ -32,16 +28,9 @@ public class JungleeClickActivity extends JungleeActivity {
 	
 	static final int CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE = 101;
 	static final int SELECT_IMAGE_ACTIVITY_REQUEST_CODE = 102;	
-	
-	private String fileNameTemplate = "junglee_cam_picture_<time-stamp>";
-	private String fileName = null;
-	private Uri imageUri = null;
-	
-	private StringBuilder urls = new StringBuilder();
-	private HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
-	
-	private File picture = null;
-	
+		
+	private HashMap<String, String> qualityToImgPath = null;
+		
 	ProgressDialog progressDlg = null;
 	
 
@@ -88,7 +77,7 @@ public class JungleeClickActivity extends JungleeActivity {
         
         setupMsgHandler();
     	
-    	ImageUtility.clearCompressedImages();    	
+    	PictureUtility.clearPreviousCompressedImages();    	
     }
     
     @Override
@@ -157,36 +146,19 @@ public class JungleeClickActivity extends JungleeActivity {
 	}
     
     private void takePicture() {
-    	//define the file-name to save photo taken by Camera activity
-    	fileName = fileNameTemplate.replaceFirst("<time-stamp>", String.valueOf(System.currentTimeMillis()));
-    	//create parameters for Intent with filename
-    	ContentValues values = new ContentValues();
-    	values.put(MediaStore.Images.Media.TITLE, fileName);
-    	values.put(MediaStore.Images.Media.DESCRIPTION, GlobalStrings.CAPTURED_IMG_DESC);
-    	//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
-    	
-    	imageUri = getContentResolver().insert(
-    	        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-    	
-    	//create new Intent
-    	Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-    	intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-    	intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-    	startActivityForResult(intent, CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
+    	startActivityForResult(PictureUtility.createCameraIntent(this), CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE);
     }
     
-    private void selectPicture() {
-    	Intent photoPickerIntent = new Intent(Intent.ACTION_PICK);
-    	photoPickerIntent.setType("image/*");
-    	startActivityForResult(photoPickerIntent, SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
+    private void selectPicture() {    	
+    	startActivityForResult(PictureUtility.createGalleryIntent(), SELECT_IMAGE_ACTIVITY_REQUEST_CODE);
     }
     
-    private void onPictureSelected() {
-    	ImageUtility.clearCompressedImages();
-    	compressSelectedPicture();
+    private void onPictureSelected(File picture) {
+    	PictureUtility.clearPreviousCompressedImages();
+    	compressSelectedPicture(picture);
     }
 
-    private void compressSelectedPicture() {
+    private void compressSelectedPicture(File picture) {
     	if(picture==null) {
     		return;
     	}
@@ -200,32 +172,20 @@ public class JungleeClickActivity extends JungleeActivity {
 		    {
 		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.COMPRESSION_STARTED));
 		    	
-		    	/*    	
-		    	String imgDst = String.format("%s/%s", ImageUtility.getCompressionTargetDir(), FileSystemUtility.extractFilenameWithExtn(imgSrc));
-		    	urls.append(FileSystemUtility.filepathToUrl(imgDst));
-		    	try {
-		    		FileSystemUtility.copyFile(imgSrc, imgDst);
-		    	} catch (IOException e) {
-		    		e.printStackTrace();
-		    	}
+		    	/*
+		    	String compressedFilepath = PictureUtility.compressImage(imgSrc
+		    			, PictureUtility.CompressionQuality.HIGH);
+		    	qualityToImgPath.put("HIGH", compressedFilepath);		    	
+		    	compressedFilepath = PictureUtility.compressImage(imgSrc
+		    			, PictureUtility.CompressionQuality.MEDIUM);
+		    	qualityToImgPath.put("MEDIUM", compressedFilepath);		    	
+		    	compressedFilepath = PictureUtility.compressImage(imgSrc
+		    			, PictureUtility.CompressionQuality.LOW);
+		    	qualityToImgPath.put("LOW", compressedFilepath);
 		    	*/
 		    	
-		    	String compressedFilepath = ImageUtility.compressImage(imgSrc
-		    			, ImageUtility.CompressionQuality.HIGH);
-		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-		    	qualityToImgPath.put("HIGH", compressedFilepath);
 		    	
-		    	compressedFilepath = ImageUtility.compressImage(imgSrc
-		    			, ImageUtility.CompressionQuality.MEDIUM);
-		    	urls.append("#");
-		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-		    	qualityToImgPath.put("MEDIUM", compressedFilepath);
-		    	
-		    	compressedFilepath = ImageUtility.compressImage(imgSrc
-		    			, ImageUtility.CompressionQuality.LOW);
-		    	urls.append("#");
-		    	urls.append(FileSystemUtility.filepathToUrl(compressedFilepath));
-		    	qualityToImgPath.put("LOW", compressedFilepath);
+		    	qualityToImgPath = PictureUtility.compressImageToVariousSizes(imgSrc);
 
 		    	handler.sendMessage(handler.obtainMessage(GlobalEventID.COMPRESSION_COMPLETED));
 		    }
@@ -233,20 +193,17 @@ public class JungleeClickActivity extends JungleeActivity {
 		ThreadUtility.executeInBackground(runnable);
     }
     
-    private void showCompressedImgs() {
-    	Intent i = new Intent(getApplicationContext(), ImgViewerActivity.class);
-    	i.putExtra("urls",urls.toString());
-    	startActivity(i);
-    }
     private void showUploadScreen() {
-    	Intent i = new Intent(getApplicationContext(), ImgUploadActivity.class);
-    	for (Entry<String, String> entry : qualityToImgPath.entrySet()) {
-            String key = entry.getKey();
-            String value = entry.getValue();
-            i.putExtra(key, value);
-        }
-    	
-    	startActivity(i);
+    	if(qualityToImgPath!=null && qualityToImgPath.size()>0) {
+    		Intent i = new Intent(getApplicationContext(), ImgUploadActivity.class);
+    		for (Entry<String, String> entry : qualityToImgPath.entrySet()) {
+    			String key = entry.getKey();
+    			String value = entry.getValue();
+    			i.putExtra(key, value);
+    		}
+
+    		startActivity(i);
+    	}
     }
     
     private void gotoWebview() {
@@ -259,20 +216,20 @@ public class JungleeClickActivity extends JungleeActivity {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 
-		urls.setLength(0);
-		qualityToImgPath.clear();
+		qualityToImgPath = null;
 		if (requestCode == CAPTURE_IMAGE_ACTIVITY_REQUEST_CODE 
 				|| requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
+			File picture = null;
 			if (resultCode == RESULT_OK) {
+				Uri imageUri = null;
 				if(requestCode == SELECT_IMAGE_ACTIVITY_REQUEST_CODE) {
 					imageUri = data.getData();
+				} else {
+					imageUri = PictureUtility.getLastCameraPictureUri();
 				}
-				picture = ImageUtility.convertImageUriToFile (imageUri, this);
+				picture = PictureUtility.convertImageUriToFile(imageUri, this);
 				
-				onPictureSelected();
-			} else {
-				picture = null;
-				fileName = null;
+				onPictureSelected(picture);
 			}
 		}
 	}

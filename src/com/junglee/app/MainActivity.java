@@ -34,9 +34,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.SearchView;
 
-import com.helpshift.Helpshift;
-
 import com.example.jungleeclick.R;
+import com.helpshift.Helpshift;
 import com.junglee.commonlib.utils.StringUtility;
 
 @SuppressLint("NewApi")

@@ -10,7 +10,6 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.Menu;
@@ -22,9 +21,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.jungleeclick.R;
+import com.junglee.commonlib.utils.StringUtility;
 import com.junglee.data.IntentData;
 import com.junglee.init.HelpScreenUIControlParams.IMG_PLACEMENT;
-import com.junglee.commonlib.utils.StringUtility;
 import com.nineoldandroids.view.ViewHelper;
 
 public class FeatureHelpScreenActivity extends Activity {

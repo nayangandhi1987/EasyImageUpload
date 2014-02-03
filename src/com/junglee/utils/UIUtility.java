@@ -8,6 +8,7 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.junglee.commonlib.logging.Logger;
+import com.junglee.utils.GlobalStrings;
 
 public class UIUtility {
 	private static final String TAG = "UIUtility";

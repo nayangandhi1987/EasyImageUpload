@@ -20,10 +20,9 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.example.jungleeclick.R;
-import com.junglee.commonlib.utils.StringUtility;
-import com.junglee.utils.GlobalStrings;
-
 import com.junglee.commonlib.logging.Logger;
+import com.junglee.commonlib.utils.LibraryGlobalStrings;
+import com.junglee.commonlib.utils.StringUtility;
 
 public class JungleeWebContainerActivity extends Activity {
 	private static final String TAG = "JungleeWebContainerActivity";
@@ -48,7 +47,7 @@ public class JungleeWebContainerActivity extends Activity {
 	    	//create parameters for Intent with filename
 	    	ContentValues values = new ContentValues();
 	    	values.put(MediaStore.Images.Media.TITLE, fileName);
-	    	values.put(MediaStore.Images.Media.DESCRIPTION, GlobalStrings.CAPTURED_IMG_DESC);
+	    	values.put(MediaStore.Images.Media.DESCRIPTION, LibraryGlobalStrings.CAPTURED_IMG_DESC);
 	    	//imageUri is the current activity attribute, define and save it for later usage (also in onSaveInstanceState)
 	    	
 	    	Uri imageUri = getContentResolver().insert(
