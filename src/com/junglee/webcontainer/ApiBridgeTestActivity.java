@@ -28,7 +28,7 @@ import com.junglee.commonlib.apibridge.ApiBridge;
 import com.junglee.commonlib.apibridge.ApiBridgeHelper;
 import com.junglee.commonlib.apibridge.INameSpace;
 import com.junglee.commonlib.eventengine.EventEngine;
-import com.junglee.commonlib.eventengine.MnThreadSyncEventHandler;
+import com.junglee.commonlib.eventengine.MnThreadEventHandler;
 import com.junglee.commonlib.location.LocationTracker;
 import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
@@ -93,7 +93,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 		apiController.attachNamespaceHandler(this, "LocationNamespace");
 		
 		String anEventType = "Type_X";
-		MnThreadSyncEventHandler anEventHandler = new MnThreadSyncEventHandler(this) {
+		MnThreadEventHandler anEventHandler = new MnThreadEventHandler(this) {
 			@Override
 			public boolean handle(JSONObject eventData) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ApiBridgeTestActivity.this);

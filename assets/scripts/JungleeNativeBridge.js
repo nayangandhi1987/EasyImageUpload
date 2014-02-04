@@ -11,9 +11,11 @@ jungleeNative = {
 
 "execute": function(namespace, methodName, fnCallBack, jsonParameter){
 	var callBackId = namespace + "_" + methodName;
-	if(__jn_callBackTable[callBackId] != undefined){
-		throw "cannot make  " + callBackId + "api call as an older call for same api is in progress";
-	}
+	
+	//if(__jn_callBackTable[callBackId] != undefined){
+	//	throw "cannot make  " + callBackId + "api call as an older call for same api is in progress";
+	//}
+	
 	__jn_callBackTable[callBackId] = fnCallBack;
 	var jsonPayload = {
 		"namespace" : namespace,

@@ -26,15 +26,29 @@ import com.junglee.commonlib.utils.FileSystemUtility;
 import com.junglee.commonlib.utils.LibraryGlobalConstants;
 import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
-
+/**
+ * PictureUtility provides common methods to create intent for camera or gallery. It also provides methods for compressing 
+ * image to different quality levels.
+ * <p> 
+ * Any activity that wants to use camera for clicking a picture or wants to select a picture from gallery can request to 
+ * create respective intents, and then fire those intents and wait for result. Once the picture is taken/selected, it can 
+ * be compressed to reduce the size (for easy upload, or for other reasons).
+ * <p>
+ * The current compressions logic converts the image to a jpg. If the resolution is huge, then it scales down the image to 
+ * a maximum of 816x612 or 612x816 without loosing the aspect ration. And then it can compress it to change the picture 
+ * quality to 100/75/50 percent. It also rotates the picture as required if the picture was not taken in the portrait mode.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class PictureUtility {	
 	private static final String TAG = "ImageUtility";	
 	
 	private static final int TEMP_STORAGE_SIZE_FOR_COMPRESSION = 16 * 1024;
 	
 	private static final int HIGH_COMPRESSION_QUALITY_VALUE = 100;
-	private static final int MEDIUM_COMPRESSION_QUALITY_VALUE = 60;
-	private static final int LOW_COMPRESSION_QUALITY_VALUE = 20;
+	private static final int MEDIUM_COMPRESSION_QUALITY_VALUE = 75;
+	private static final int LOW_COMPRESSION_QUALITY_VALUE = 50;
 	
 	private static final String FILE_NAME_TEMPLATE = "junglee_cam_picture_<time-stamp>";
 	private static Uri CAMERA_PICTURE_URI = null;

@@ -4,6 +4,13 @@ import java.util.List;
 
 import com.junglee.init.HelpScreenUIControlParams;
 
+/**
+ * IntentData provides a way to sharing data between the activities, when one activity starts another activity through 
+ * an intent. It helps to avoid the need to serialize and then deserialize the data being shared between those activities.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class IntentData {
 	private static IntentData instance = null;
 	

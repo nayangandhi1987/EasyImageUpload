@@ -6,6 +6,17 @@ import android.content.SharedPreferences;
 
 import com.junglee.commonlib.logging.Logger;
 
+/**
+ * AppStartup is the starting point for the app. All the initialization should happen here.
+ * <p> 
+ * When the app starts, there will be few things which need to be initialized. All such initializations go here. Assuming 
+ * that the app starts by showing a splash screen, then performTasks() method is called which will be responsible for all 
+ * initialization or registeration related tasks. It also has logic to detect if it's a first time launch or a subsequent 
+ * launch, and based on that it can take some special actions for the first time launch. 
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class AppStartup {
 	public static void performTasks(Context c) {
 		onEachLaunchPre(c); // perform each launch tasks

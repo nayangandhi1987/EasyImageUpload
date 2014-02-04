@@ -19,6 +19,20 @@ import android.provider.Settings;
 
 import com.junglee.commonlib.logging.Logger;
 
+/**
+ * LocationTracker can be used to get the geo-location of the device. It can be used to get the geo-location one time, 
+ * or it can also be requested to set up listeners to keep track of the location changes.
+ * <p> 
+ * It can get the geo-location of the device using gps or network. If it gets the location from both the sources, then 
+ * it tries to guess which one of those is more precise depending on different parameters. It can be used to get the 
+ * location in terms of latitude/longitude, or more readable form like city, or city along with pincode and country. 
+ * As of now, it is only used to get the location one time when the object is constructed. The listeners for the 
+ * location updates are not implemented. If required those can be implemented to keep a continuous check on location 
+ * changes.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class LocationTracker implements LocationListener {
 	private static final String TAG = "LocationTracker";
 	private Context context = null;

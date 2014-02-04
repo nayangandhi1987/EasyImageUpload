@@ -3,6 +3,12 @@ package com.junglee.commonlib.apibridge;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+/**
+ * ApiBridgeHelper provides some common utility functions for working with ApiBridge.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class ApiBridgeHelper {
 	private static final String ERROR_TAG = "error";
 	private static final String ERROR_MSG_TAG = "errorMessage";

@@ -2,6 +2,20 @@ package com.junglee.commonlib.logging;
 
 import android.util.Log;
 
+/**
+ * Logger class provides an abstraction for logging within the app. It also allows to set the minimum log level, such 
+ * that the log messages with lesser importance will be skipped.
+ * <p> 
+ * It provides generic methods to log messages for the specific importance. The log level set in the Logger will decide 
+ * whether those messages are to be logged or not. It currently uses android.util.Log class, but that can be changed without
+ * affecting rest of the application code. We can later switch to using persistent logging.
+ * <p>
+ * It also provides methods to send logs to the server, and to leave bread crumbs that may be sent to the server at some point 
+ * in time. These methods are yet to be implemented.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class Logger
 {
 	public static final int LEVEL_VERBOSE = 0;

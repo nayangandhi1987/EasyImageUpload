@@ -23,6 +23,27 @@ import com.junglee.commonlib.eventengine.EventEngine;
 import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.StringUtility;
 
+/**
+ * ApiBridge is bound to a webview, and it sets up a communication bridge between the javascript and the native app.
+ * <p> 
+ * Different api providers need to implement the INamespace interface. Multiple namespaces can be attached to (or 
+ * detached from) the webview at any time.
+ * <p>
+ * Javascript can request any native api to be executed by calling the processRequest() method, specifying 
+ * the namespace, the api name, along with the required parameters, and a callback function for submitting 
+ * the result. The specified namespace will  then execute the request, and the result will be submitted back 
+ * asynchronously using publishResult() method which will internally cause the handleCallToJS() method to be 
+ * invoked.
+ * <p>
+ * Javacript can fire various events by calling sendEvent() method, specifying the type of event, along with 
+ * the event parameters. The event will then be broadcasted through EventEngine, and any registered listeners 
+ * for that event will be notified of the event.
+ * <p>
+ * The executeJsCode() method can be called to directly execute some javascript code.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class ApiBridge {
 	private static final String TAG = "ApiBridge";
 	
@@ -54,7 +75,6 @@ public class ApiBridge {
 	private static final Set<String> SUPPORTED_MESSAGE_SET = new HashSet<String>(
 																 Arrays.asList(MSG_CALL_JS
 																 ));
-	
 	
 	public ApiBridge(WebView webview) {
 		if(webview != null) {
@@ -104,11 +124,6 @@ public class ApiBridge {
     	};
 	}
 	
-	/*public void attachNamespaceHandler(INameSpace namespace) {
-		if(namespace != null) {
-			attachNamespaceHandler(namespace, namespace.getDefaultName());
-		}
-	}*/
 	public void attachNamespaceHandler(INameSpace namespace, String name) {
 		
 		if(namespace == null) return;
@@ -118,17 +133,10 @@ public class ApiBridge {
 		}
 		
 		this.namespaces.put(name, namespace);
-		
-//		if(apiBridge.webview != null) {
-//			apiBridge.webview.addJavascriptInterface(this, name);			
-//		}
 	}
 	public void detachNamespaces(String name) {
 		if(StringUtility.isPopulated(name) && this.namespaces.containsKey(name)) {
 			this.namespaces.remove(name);
-//			if(this.webview != null) {
-//				this.webview.addJavascriptInterface(null, name);
-//			}
 		}
 	}
 	public boolean isNamespaceSupported(String name){
@@ -229,9 +237,5 @@ public class ApiBridge {
 		} else {
 			// No webview is attached
 		}
-	}
-	
-	private String convertToJsonMsg(String msg, String key) {
-		return String.format("{\"%s\": \"%s\"}", key, msg);
 	}
 }

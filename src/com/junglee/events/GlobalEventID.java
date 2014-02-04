@@ -1,5 +1,11 @@
 package com.junglee.events;
 
+/**
+ * GlobalEventID contains globals event ids that are part of the app.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class GlobalEventID {
 	public static final int COMPRESSION_STARTED = 0;
 	public static final int COMPRESSION_COMPLETED = 1;

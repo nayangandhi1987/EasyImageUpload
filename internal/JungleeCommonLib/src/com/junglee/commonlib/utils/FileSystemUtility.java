@@ -20,6 +20,16 @@ import android.content.res.AssetManager;
 
 import com.junglee.commonlib.logging.Logger;
 
+/**
+ * FileSystemUtility provides common methods to deal with the file system.
+ * <p> 
+ * It provides commonly used functions that need to deal with file system, like reading file, copying file, reading 
+ * file size in a readable form, or extracting file name, or accessing asset directory, etc. All such common methods 
+ * should go in this class, rather than every class implementing same thing over and over again.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class FileSystemUtility {
 	private static final String TAG = "FileSystemUtility";
 	

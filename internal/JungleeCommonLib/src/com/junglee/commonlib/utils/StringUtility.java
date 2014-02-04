@@ -1,5 +1,16 @@
 package com.junglee.commonlib.utils;
 
+
+/**
+ * StringUtility provides common methods to deal with strings.
+ * <p> 
+ * It provides commonly used functions that need to deal with strings, like checking if a string is populated or not, 
+ * chopping characters from it, url strings, etc. All such common methods should go in this class, rather than every 
+ * class implementing same thing over and over again.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class StringUtility {
 	public static boolean isBlank(String str) {
 		return (str==null || str.length()==0);

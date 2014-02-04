@@ -10,6 +10,14 @@ import android.widget.Toast;
 import com.junglee.commonlib.logging.Logger;
 import com.junglee.utils.GlobalStrings;
 
+/**
+ * UIUtility provides common methods to deal with the basic UI components like showing progres dialog, or a toast, or 
+ * alert box, etc. It can also be used to other common methods like calculating screen size , or actionbar size , or 
+ * the statusbar size, etc.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class UIUtility {
 	private static final String TAG = "UIUtility";
 	

@@ -4,7 +4,17 @@ import org.json.JSONObject;
 
 import android.os.Handler;
 
-public class ASyncEventHandler implements EventHandler {
+/**
+ * ASyncEventHandler is an implementation of IEventHandler such that the handling logic will be executed asynchronously.
+ * <p> 
+ * When an event occurs, the EventEngine loops through all the registered event handlers and invokes their execute() 
+ * method. If an event handlers is an instance of ASyncEventHandler, the EventEngine will simply schedule the processing 
+ * of this handler and move on to the next handler without waiting for the processing of this handler is finished.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
+public class ASyncEventHandler implements IEventHandler {
 	@Override
 	public boolean execute(final JSONObject eventData) {
 		Handler h = new Handler();
