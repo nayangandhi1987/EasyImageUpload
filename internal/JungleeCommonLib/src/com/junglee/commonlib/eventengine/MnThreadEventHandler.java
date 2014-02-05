@@ -23,8 +23,11 @@ public class MnThreadEventHandler extends SyncEventHandler {
 		this.activity = activity;
 	}
 	
+	/**
+	 * Makes sure that the handling logic executes on the main thread.
+	 */
 	@Override
-	public boolean execute(final JSONObject eventData) {
+	public void execute(final JSONObject eventData) {
 		if(ThreadUtility.isItMainThread()) {
 			super.execute(eventData);
 		} else {
@@ -36,7 +39,5 @@ public class MnThreadEventHandler extends SyncEventHandler {
 				}
 			});
 		}
-		
-		return true;
 	}
 }

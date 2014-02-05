@@ -95,13 +95,12 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
 		String anEventType = "Type_X";
 		MnThreadEventHandler anEventHandler = new MnThreadEventHandler(this) {
 			@Override
-			public boolean handle(JSONObject eventData) {
+			public void handle(JSONObject eventData) {
 				AlertDialog.Builder builder = new AlertDialog.Builder(ApiBridgeTestActivity.this);
 				builder.setMessage("Received event 'Type_X' from Event Engine!");
 				builder.setCancelable(true);
 				AlertDialog alert11 = builder.create();
 				alert11.show();
-				return true;
 			}
 		};
 		EventEngine.getInstance().register(anEventType, anEventHandler);

@@ -15,8 +15,11 @@ import android.os.Handler;
  * @since       1.0
  */
 public class ASyncEventHandler implements IEventHandler {
+	/**
+	 * Makes sure that the handling logic executes asynchronously.
+	 */
 	@Override
-	public boolean execute(final JSONObject eventData) {
+	public void execute(final JSONObject eventData) {
 		Handler h = new Handler();
 		Runnable r = new Runnable() {			
 			@Override
@@ -25,12 +28,10 @@ public class ASyncEventHandler implements IEventHandler {
 			}
 		};
 		h.post(r);
-		
-		return false;
 	}
 
 	@Override
-	public boolean handle(JSONObject eventData) {
-		return false;
+	public void handle(JSONObject eventData) {
+		
 	}
 }

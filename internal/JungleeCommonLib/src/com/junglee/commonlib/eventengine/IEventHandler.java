@@ -12,7 +12,15 @@ import org.json.JSONObject;
  * @since       1.0
  */
 public interface IEventHandler {
-	public boolean execute(JSONObject eventData);
+	/**
+	 * Executes the event handling logic for this handler
+	 * @param eventData the event data in the form of a json object
+	 */
+	public void execute(JSONObject eventData);
 	
-	public boolean handle(JSONObject eventData);
+	/**
+	 * Contains the core handling logic for this handler
+	 * @param eventData the event data in the form of a json object
+	 */
+	public void handle(JSONObject eventData);
 }

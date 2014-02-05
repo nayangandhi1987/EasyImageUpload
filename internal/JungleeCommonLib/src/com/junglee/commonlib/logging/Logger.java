@@ -40,10 +40,20 @@ public class Logger
      */
     private static String DEFAULT_TAG = "JungleeNativeApp";
     
+    /**
+     * Sets the log level for the logger class below which the log messages should be skipped.
+     * @param logLevel the log level
+     */
     public static void initLogger(int logLevel) {
     	LOGGER_LEVEL = logLevel;
     }
+    
 
+    /**
+     * Write a verbose log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
     public static int verbose(String message) {
     	return verbose(DEFAULT_TAG, message);
     }
@@ -58,7 +68,14 @@ public class Logger
     public static int verbose(String tag, String secondaryTag, String message) {
     	return verbose(tag, addSecTagToLogMessage(message, secondaryTag));
     }
+    
 
+    /**
+     * Write a debug log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
+    
     public static int debug(String message) {
     	return debug(DEFAULT_TAG, message);
     }
@@ -73,7 +90,14 @@ public class Logger
     public static int debug(String tag, String secondaryTag, String message) {
     	return debug(tag, addSecTagToLogMessage(message, secondaryTag));
     }
+    
 
+    /**
+     * Write a info log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
+    
     public static int info(String message) {
     	return info(DEFAULT_TAG, message);
     }
@@ -89,6 +113,13 @@ public class Logger
     	return info(tag, addSecTagToLogMessage(message, secondaryTag));
     }
 
+    
+    /**
+     * Write a warn log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
+    
     public static int warn(String message) {
     	return warn(DEFAULT_TAG, message);
     }
@@ -104,6 +135,13 @@ public class Logger
     	return warn(tag, addSecTagToLogMessage(message, secondaryTag));
     }
 
+    
+    /**
+     * Write a error log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
+    
     public static int error(String message) {
     	return error(DEFAULT_TAG, message);
     }
@@ -118,7 +156,14 @@ public class Logger
     public static int error(String tag, String secondaryTag, String message) {
     	return error(tag, addSecTagToLogMessage(message, secondaryTag));
     }
-
+    
+    
+    /**
+     * Write a exception log message
+     * @param message the log message
+     * @return 0/-1 - 0 means the message is logged, else it's skipped
+     */
+    
     public static int exception(String message) {
     	return exception(DEFAULT_TAG, message);
     }
@@ -138,11 +183,17 @@ public class Logger
     
     
     
-    
+    /**
+     * Send the log to the server
+     */
     public static void sendLogs() {
     	// upload logs to the server
     }
     
+    /**
+     * I can be used to leave short messages to indicate the flow of the application in any session. All the breadcrumbs can later be sent to the server. 
+     * @param breadcrumb the breadcrumb message
+     */
     public static void leaveBreadCrumb(String breadcrumb) {
     	
     }

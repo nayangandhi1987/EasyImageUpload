@@ -13,13 +13,16 @@ import org.json.JSONObject;
  * @since       1.0
  */
 public class SyncEventHandler implements IEventHandler {
+	/**
+	 * Makes sure that the handling logic executes synchronously.
+	 */
 	@Override
-	public boolean execute(JSONObject eventData) {
-		return handle(eventData);
+	public void execute(JSONObject eventData) {
+		handle(eventData);
 	}
 
 	@Override
-	public boolean handle(JSONObject eventData) {
-		return false;
+	public void handle(JSONObject eventData) {
+		
 	}
 }

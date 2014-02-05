@@ -14,7 +14,21 @@ import org.json.JSONObject;
  * @since       1.0
  */
 public interface INameSpace {
+	/**
+	 * Process the request made by the javascript running in the webview.
+	 * @param namespace name of the namespace
+	 * @param apiName the api or the method name
+	 * @param request the request params
+	 * @param requestId the request identifier
+	 * @param controller the api bridge controller
+	 * @return json object as response of the request
+	 */
 	JSONObject processRequest(String namespace, String apiName, JSONObject request, String requestId, ApiBridge controller);
+	
+	/**
+	 * Gets the default name for this namespace api provider.
+	 * @return the default name for namespace
+	 */
 	String getDefaultName();
 }
 

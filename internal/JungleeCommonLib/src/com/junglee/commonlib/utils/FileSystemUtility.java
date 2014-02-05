@@ -38,6 +38,11 @@ public class FileSystemUtility {
 	private static final int GB = 1024 * 1024 *1024;
 	
 	
+	/**
+	 * Checks if a file is present or not.
+	 * @param filepath the path of the file.
+	 * @return true if the file exists, else false.
+	 */
 	public static boolean exists(String filepath) {
 		if(StringUtility.isBlank(filepath)) return false;
 		
@@ -45,12 +50,27 @@ public class FileSystemUtility {
 		return file.exists();     
 	}
 	
+	/**
+	 * Extracts file name with extension from the given file path.
+	 * @param filepath the path of the file.
+	 * @return file name with extension.
+	 */
 	public static String extractFilenameWithExtn(String filepath) {
 		return extractFilename(filepath, true);
 	}
+	/**
+	 * Extracts file name without extension from the given file path.
+	 * @param filepath the path of the file.
+	 * @return file name without extension.
+	 */
 	public static String extractFilename(String filepath) {
 		return extractFilename(filepath, false);
 	}
+	/**
+	 * Extracts file name with/without extension from the given file path.
+	 * @param filepath the path of the file.
+	 * @return file name with/without extension.
+	 */
 	public static String extractFilename(String filepath, boolean keepExtn) {
 		if(StringUtility.isBlank(filepath)) {
 			return filepath;
@@ -65,10 +85,21 @@ public class FileSystemUtility {
 		return parts[parts.length-1];
 	}
 	
+	/**
+	 * Generates a url for a local file.
+	 * @param filepath the path of the file.
+	 * @return the local url for the file.
+	 */
 	public static String filepathToUrl(String filepath) {
 		return "file://"+filepath;
 	}
 	
+	/**
+	 * Copies source file to destination.
+	 * @param fileSrc the source file path
+	 * @param fileDst the destination file path
+	 * @throws IOException
+	 */
 	public static void copyFile(String fileSrc, String fileDst) throws IOException {
     	Logger.debug(TAG, "Copying File: " + fileSrc + " => " + fileDst);
     	File src = new File(fileSrc);
@@ -93,10 +124,15 @@ public class FileSystemUtility {
         Logger.verbose(TAG, "Copied To => " + fileDst);
     }
 	
-	String readFileContent(String fileName) {
+	/**
+	 * Read content of a text file as a string.
+	 * @param filePath the path of the file.
+	 * @return file content as string.
+	 */
+	String readFileContent(String filePath) {
 	    try {
 	        StringBuilder sb = new StringBuilder();
-	        BufferedReader br = new BufferedReader(new FileReader(fileName));
+	        BufferedReader br = new BufferedReader(new FileReader(filePath));
 	        String line = br.readLine();
 
 	        while (line != null) {
@@ -114,13 +150,18 @@ public class FileSystemUtility {
 	    return null;
 	}
 	
-	public static String readAssetFileContent(String filepath, Context c) {
+	/**
+	 * Read content of a text file in the assets directory as a string.
+	 * @param relativeFilepath the relative file path in the assets directory.
+	 * @param c the context
+	 * @return fiel content as string
+	 */
+	public static String readAssetFileContent(String relativeFilepath, Context c) {
 		AssetManager assetManager = c.getAssets();
 
-		Map<String, JSONObject> helpScreenParamsDataMap = new HashMap<String, JSONObject>();
 		String content = null;
 		try {
-			InputStream fileIStream = assetManager.open("HelpScreenJson");
+			InputStream fileIStream = assetManager.open(relativeFilepath);
 			if (fileIStream != null) {
 				StringWriter writer = new StringWriter();
 
@@ -142,6 +183,10 @@ public class FileSystemUtility {
 		return content;
 	}
 	
+	/**
+	 * Deletes a single file or a directory recursively with all its contents.
+	 * @param fileOrDirectory File object for the given file or directory.
+	 */
 	public static void deleteRecursive(File fileOrDirectory) {
 	    if (fileOrDirectory.isDirectory())
 	        for (File child : fileOrDirectory.listFiles())
@@ -149,16 +194,29 @@ public class FileSystemUtility {
 
 	    fileOrDirectory.delete();
 	}
-	public static void deleteDirectoryContents(File fileOrDirectory) {
-	    if (fileOrDirectory.isDirectory())
-	        for (File child : fileOrDirectory.listFiles())
+	/**
+	 * Deletes all the contents from a directory without deleting the given directory itself.
+	 * @param directory the File object for the directory whose contents are to be deleted.
+	 */
+	public static void deleteDirectoryContents(File directory) {
+	    if (directory.isDirectory())
+	        for (File child : directory.listFiles())
 	        	deleteRecursive(child);
 	}
 	
+	/**
+	 * Checks if an sd card is present or not.
+	 * @return true if present, else false.
+	 */
 	public static boolean isSdPresent() {
 	    return android.os.Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 	}
 	
+	/**
+	 * Returns the size in a more readable form with GB/MB/KB/Bytes etc given the size as number of bytes.
+	 * @param size the size in bytes.
+	 * @return size in the more readable form
+	 */
 	public static String getFileSizeAsString(long size) {
 		String sizeAsString = null;
 		

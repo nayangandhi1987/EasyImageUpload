@@ -17,8 +17,11 @@ import com.junglee.commonlib.utils.ThreadUtility;
  */
 public class BgThreadEventHandler extends ASyncEventHandler {
 	
+	/**
+	 * Makes sure that the handling logic executes in a background thread.
+	 */
 	@Override
-	public boolean execute(final JSONObject eventData) {
+	public void execute(final JSONObject eventData) {
 		if(!ThreadUtility.isItMainThread()) {
 			super.execute(eventData);
 		} else {
@@ -28,8 +31,6 @@ public class BgThreadEventHandler extends ASyncEventHandler {
 					BgThreadEventHandler.super.execute(eventData);
 				}
 			});
-		}		
-		
-		return true;
+		}
 	}
 }

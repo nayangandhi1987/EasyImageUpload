@@ -63,6 +63,11 @@ public class LocationTracker implements LocationListener {
     // Declaring a Location Manager
     protected LocationManager locationManager;
  
+    /**
+     * The constructor of the Locationtracker. It internally retrieves the location one time, and then can keep listening to updates depending on the flag.
+     * @param c the activity context
+     * @param listenToUpdates whether it should retrieve location on time, or keep listening to location updates too.
+     */
     public LocationTracker(Context c, boolean listenToUpdates) {
     	this.context = c;
     	this.listenToUpdates = listenToUpdates;
@@ -74,6 +79,11 @@ public class LocationTracker implements LocationListener {
     	}
     }
     
+    /**
+     * Retrieves the geo-location of the device. It can use either or both of gps and network. If it gets the location from both the sources, then 
+     * it tries to guess which one of those is more precise depending on different parameters.
+     * @return the location retrieved
+     */
     public Location retrieveLocation() {    	
     	
         try {
@@ -150,12 +160,19 @@ public class LocationTracker implements LocationListener {
         return location;
     }
     
+    /**
+     * Unregisters for location updates
+     */
     public void stopUsingGPS(){
         if(locationManager != null){
             locationManager.removeUpdates(LocationTracker.this);
         }       
     }
     
+    /**
+     * Returns the latitude of the retrieved location.
+     * @return the current latitude
+     */
     public double getLatitude(){
         if(location != null){
             latitude = location.getLatitude();
@@ -164,6 +181,10 @@ public class LocationTracker implements LocationListener {
         return latitude;
     }
      
+    /**
+     * Returns the longitude of the retrieved location.
+     * @return the current longitude
+     */
     public double getLongitude(){
         if(location != null){
             longitude = location.getLongitude();
@@ -172,6 +193,10 @@ public class LocationTracker implements LocationListener {
         return longitude;
     }
     
+    /**
+     * It returns the location in a more readable form as string. For eg: "Bangalore - 560034, India"
+     * @return the location string
+     */
     public String getReadableLocation() {
     	String locationString = null;
     	
@@ -199,6 +224,10 @@ public class LocationTracker implements LocationListener {
     	return locationString;
     }
     
+    /**
+     * It returns the city as a string. For eg: "Bangalore"
+     * @return the city
+     */
     public String getCity() {
     	String cityString = null;
     	
@@ -218,6 +247,9 @@ public class LocationTracker implements LocationListener {
     	return cityString;
     }
     
+    /**
+     * Shows the settings dialog to enable gps.
+     */
     public void showSettingsAlert(){
         AlertDialog.Builder alertDialog = new AlertDialog.Builder(context);
       
@@ -249,6 +281,12 @@ public class LocationTracker implements LocationListener {
         alertDialog.show();
     }
     
+    /**
+     * It compares the two location based on which one is newer or which one is more accurate if not much difference in their update time.
+     * @param location1 the first location
+     * @param location2 the second location
+     * @return location object corresponding to the better location
+     */
     protected Location getBetterLocation(Location location1, Location location2) {
     	if (location1 != null && location2 != null) {
     		// Check whether the new location fix is newer or older

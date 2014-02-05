@@ -26,6 +26,12 @@ public class ApiBridgeHelper {
 	public static final String ERROR_MSG_METHOD_NOT_SUPPORTED_BY_DEFAULT_NAMESPACE = 
 			"The method \'%s\' is not supported by Default Controller";
 	
+	/**
+	 * Creates a json object for an error response.
+	 * @param errMsg the error message string
+	 * @param errCode the error code
+	 * @return json response object
+	 */
 	public static JSONObject jsonWithError(String errMsg, int errCode) {
 		JSONObject errJson = new JSONObject();
 		try {
@@ -38,6 +44,11 @@ public class ApiBridgeHelper {
 		
 		return errJson;
 	}
+	/**
+	 * Checks the result json object to determine if the request had failed.
+	 * @param json the result json object
+	 * @return true if result object has an error tag set to true, otherwise false
+	 */
 	public static boolean isRequestFailed(JSONObject json) {
 		try {
 			if(json != null && json.has(ERROR_TAG) && json.getBoolean(ERROR_CODE_TAG) == true) {
@@ -50,6 +61,10 @@ public class ApiBridgeHelper {
 		return false;
 	}
 	
+	/**
+	 * Creates a json object for a response indicating the request is still in progress.
+	 * @return json response object
+	 */
 	public static JSONObject jsonWithReqInProcess() {
 		JSONObject reqInProcessJson = new JSONObject();
 		try {
@@ -60,6 +75,11 @@ public class ApiBridgeHelper {
 		
 		return reqInProcessJson;
 	}
+	/**
+	 * Checks the result json object to determine if the request is in progress.
+	 * @param json the result json object
+	 * @return true if result object has an in progress tag set to true, otherwise false
+	 */
 	public static boolean isRequestInProcess(JSONObject json) {
 		try {
 			if(json != null && json.has(REQ_IN_PROCESS_TAG) && json.getBoolean(REQ_IN_PROCESS_TAG) == true) {

@@ -76,6 +76,10 @@ public class ApiBridge {
 																 Arrays.asList(MSG_CALL_JS
 																 ));
 	
+	/**
+	 * The constructor for the api bridge.
+	 * @param webview the webview that will be boud to this api bridge
+	 */
 	public ApiBridge(WebView webview) {
 		if(webview != null) {
 			webview.getSettings().setJavaScriptEnabled(true);
@@ -124,6 +128,11 @@ public class ApiBridge {
     	};
 	}
 	
+	/**
+	 * Attaches a namespace api provider to the webview. Javascript can refer to this namespace for making requests to the native app.
+	 * @param namespace the namespace api provider
+	 * @param name the name of the namespace. Javascript will use this name when making a request to the native app.
+	 */
 	public void attachNamespaceHandler(INameSpace namespace, String name) {
 		
 		if(namespace == null) return;
@@ -134,6 +143,10 @@ public class ApiBridge {
 		
 		this.namespaces.put(name, namespace);
 	}
+	/**
+	 * Detaches a namespace api provider to the webview.
+	 * @param name the name of the namespace.
+	 */
 	public void detachNamespaces(String name) {
 		if(StringUtility.isPopulated(name) && this.namespaces.containsKey(name)) {
 			this.namespaces.remove(name);
@@ -147,6 +160,14 @@ public class ApiBridge {
 	public void jsHello() {
 		Logger.info(TAG, "Hello from Javascript");
 	}
+	
+	/**
+	 * Javascript calls this function to make a request to the native app. When the request completes, the result will
+     * be submitted back to the javascript asynchronously.
+	 * @param requestId the identifier for the request. javascript maps it to a callback function
+	 * @param request the actual request in the form of a json string containing namespace, api name, 
+     * 				  and request params as json.
+	 */
 	@JavascriptInterface
 	public void processRequest(final String requestId, final String request){
 		try {
@@ -185,6 +206,10 @@ public class ApiBridge {
 		}	
 	}
 	
+	/**
+	 * Javascript calls this function to notify native app about an event happened inside the webview.
+	 * @param event the actual event in the form of a json string containing the event type and the event params as json.
+	 */
 	@JavascriptInterface	
 	public void sendEvent(String event) {		
 		JSONObject eventJson;
@@ -204,6 +229,11 @@ public class ApiBridge {
 		publishResult(requestId, response);
 	}
 	
+	/**
+	 * Used to submit the result of a request initiated from the javascript. 
+	 * @param requestId the identifier for the request. javascript maps it to a callback function
+	 * @param response the response data as json for the given request
+	 */
 	public void publishResult(String requestId, String response) {		
 		if(handler != null) {
 			Message msgObj = handler.obtainMessage();
@@ -216,6 +246,10 @@ public class ApiBridge {
 		}
 	}
 	
+	/**
+	 * Used to make the callback to the javascript for a request along with the result json data
+	 * @param bundle the Bundle object containing the requestId and the json paylod (i.e the result data for the request: requestId)
+	 */
 	public void handleCallToJS(Bundle bundle) {
 		try {
 			String callbackFunc = DEFAULT_JS_CONTROLLER_FNNAME;
@@ -229,6 +263,10 @@ public class ApiBridge {
 		}
 	}
 	
+	/**
+	 * Executes the specified javascript code inside the webview
+	 * @param jsCode the javascript code (in the form of a string) to be executed in the webview
+	 */
 	public void executeJsCode(String jsCode) {
 		if(this.webview != null && StringUtility.isPopulated(jsCode)) {
 			String sUrlToCall = String.format("javascript: %s", jsCode);

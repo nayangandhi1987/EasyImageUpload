@@ -23,7 +23,6 @@ import com.example.jungleeclick.R;
 import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
-
 public class JungleeWebContainerActivity extends Activity {
 	private static final String TAG = "JungleeWebContainerActivity";
 	

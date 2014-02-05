@@ -74,7 +74,9 @@ public class PictureUtility {
 	}
 	
 	
-	
+	/**
+	 * Clear the directory containing the compressed images, when they are no longer needed. They should not keep accumulating and waste storage.
+	 */
 	public static void clearPreviousCompressedImages() {
 		File dir = new File(getCompressionTargetDir());
 	    if (dir.exists()) {
@@ -82,6 +84,11 @@ public class PictureUtility {
 	    }
 	}
 	
+	/**
+	 * Creates the intent for launching the camera application to click a picture. It also takes care of the file output path where the picture will be temporarily stored.
+	 * @param c the context
+	 * @return the intent for launching camera
+	 */
 	public static Intent createCameraIntent(Context c) {
 		Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
     	intent.putExtra(MediaStore.EXTRA_OUTPUT, generateUriForCameraPicture(c));
@@ -89,9 +96,18 @@ public class PictureUtility {
     	
     	return intent;
 	}
+	/**
+	 * Returns the picture uri that was used when the camera was launched the last time.
+	 * @return the uri of last camera picture
+	 */
 	public static Uri getLastCameraPictureUri() {
 		return CAMERA_PICTURE_URI;
 	}
+	
+	/**
+	 * Creates the intent for launching the gallery application to select a picture.
+	 * @return the intent for launching gallery
+	 */
 	public static Intent createGalleryIntent() {
 		Intent intent = new Intent(Intent.ACTION_PICK);
 		intent.setType("image/*");
@@ -99,6 +115,12 @@ public class PictureUtility {
     	return intent;
 	}
 	
+	/**
+	 * Creates a File object for the given image uri.
+	 * @param imageUri the image uri.
+	 * @param activity the activity.
+	 * @return the image as file.
+	 */
 	public static File convertImageUriToFile (Uri imageUri, Activity activity)  {
 		if(imageUri == null) return null;
 		
@@ -117,6 +139,14 @@ public class PictureUtility {
 		return null;
 	}
 	
+	/**
+	 * Compresses the image to reduce it's size. The current compressions logic converts the image to a jpg. If the resolution is huge, then it scales 
+	 * down the image to a maximum of 816x612 or 612x816 without loosing the aspect ration. And then it can compress it to change the picture quality to 
+	 * 100/75/50 percent. It also rotates the picture as required if the picture was not taken in the portrait mode.
+	 * @param filepath the actual file path.
+	 * @param quality the quality to which the image should be compressed - HIGH/MEDIUM/LOW.
+	 * @return the path of the compressed file.
+	 */
 	public static String compressImage(String filepath, CompressionQuality quality) {
 		Logger.info(TAG, "Compress Image => " + filepath);
 		 
@@ -245,6 +275,11 @@ public class PictureUtility {
         return targetFilepath;
  
     }
+	/**
+	 * Compresses the original image to various compresion qualities, and returns a hash map of the compression quality to the compressed image file path.
+	 * @param filepath the actual image file path to be compressed.
+	 * @return a hashmap of the compression quality to the compressed image file path.
+	 */
 	public static HashMap<String, String> compressImageToVariousSizes(String filepath) {
 		if(FileSystemUtility.exists(filepath)) {
 			HashMap<String, String> qualityToImgPath = new HashMap<String, String>();
@@ -257,6 +292,10 @@ public class PictureUtility {
 		return null;
 	}
 	
+	/**
+	 * Returns the target directory path where compressed images get stored.
+	 * @return the target directory path.
+	 */
 	public static String getCompressionTargetDir()
 	{
 		StringBuilder pathBuilder = new StringBuilder();
@@ -270,6 +309,11 @@ public class PictureUtility {
 		return pathBuilder.toString();
 	}
 	
+	/**
+	 * Returns the suffix to be used as part of the file name based on the compression quality.
+	 * @param quality the compression quality.
+	 * @return the suffix corresponding to the compression quality.
+	 */
 	private static String getCompressionSuffix(CompressionQuality quality) {
 		String suffixParam = COMPRESSION_SUFFIX_UNKNOWN_QUALITY;
 
@@ -288,6 +332,12 @@ public class PictureUtility {
 		return COMPRESSED_IMG_SUFFIX_TEMPLATE.replace("<quality>", suffixParam);
 	}
 	
+	/**
+	 * Returns the target path of the compressed image given the original file name, and the suffix to be used
+	 * @param name
+	 * @param suffix
+	 * @return the target file path of the compressed image.
+	 */
 	private static String getCompressedImgTargetPath(String name, String suffix) {
 	    File dir = new File(getCompressionTargetDir());
 	    if (!dir.exists()) {
@@ -312,6 +362,11 @@ public class PictureUtility {
 	 
 	}
 	
+	/**
+	 * Generates the uri for the camera picture to be clicked. It uses a template file name. 
+	 * @param c the activity context.
+	 * @return the generated uri.
+	 */
 	private static Uri generateUriForCameraPicture(Context c) {
 		String fileName = FILE_NAME_TEMPLATE.replaceFirst("<time-stamp>", String.valueOf(System.currentTimeMillis()));
     	//create parameters for Intent with filename
