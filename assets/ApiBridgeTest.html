@@ -2,7 +2,6 @@
 <head>
 <script type='text/javascript' src="scripts/JungleeNativeBridge.js"></script>
 <script type='text/javascript'>
-
 function nativeResultHandler(jsonResp){
 	alert("Got a response:\n" + JSON.stringify(jsonResp));
 }
@@ -48,12 +47,10 @@ function fireEvent(){
 }
 </script>
 </head>
-
-<body>  
-
+<body>
   <div>
     <img id='imgToUpload' src='' width='335' height='360'/>
-    <p id="loc">&lt;Location placeholder&gt;</p>
+    <p id="loc">Location placeholder</p>
     <input type="button" onclick="takePicture()" value="Camera" />
     <input type="button" onclick="pickFromGallery()" value="Gallery" />
     <input type="button" onclick="fetchLocation()" value="Location" />
@@ -61,6 +58,5 @@ function fireEvent(){
     <input type="button" onclick="wrongMethod()" value="WrongMethod" />
     <input type="button" onclick="fireEvent()" value="FireEvent" />
   </div>
-
 </body>
 </html>

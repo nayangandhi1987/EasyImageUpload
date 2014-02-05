@@ -67,15 +67,21 @@ jungleeNative = {
 
 
 /*
- * This mehtod is the js-controller's callback 
+ * This method is the js-controller's callback 
  */	
 "__callback": function(requestId,jsonStringParam){
+	console.log('Calling __callback()');
+	console.log('Calling __callback('+requestId+', '+jsonStringParam+')');
 	if(__jn_callBackTable[requestId] != undefined){
 		var sMsg = decodeURIComponent(jsonStringParam);
 		var fnCallBack = __jn_callBackTable[requestId], resultParam;
 		__jn_callBackTable[requestId] = undefined;
 		resultParam = JSON.parse(sMsg);
+		console.log('Making the actual function call - the one found in callback table corresponding to '+requestId);
 		fnCallBack(resultParam);
+		console.log('Made the actual function call');
+	} else {
+		console.log('No function found corresponding to '+requestId+' in the callback table!');
 	}
 }	
 };

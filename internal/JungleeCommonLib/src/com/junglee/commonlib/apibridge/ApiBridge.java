@@ -49,7 +49,7 @@ public class ApiBridge {
 	
 	private static String DEFAULT_NATIVE_JS_OBJECT_NAME = "jungleeNativeApp";
 	private static String DEFAULT_JS_CONTROLLER_FNNAME = "jungleeNative.__callback";
-	private Handler uiHandler = null;
+	private Handler handler = null;
 		
 	public Map<String, INameSpace> namespaces;
 	public WebView webview;
@@ -105,7 +105,7 @@ public class ApiBridge {
 		this.webview.addJavascriptInterface(this, DEFAULT_NATIVE_JS_OBJECT_NAME);
 		this.namespaces = new HashMap<String, INameSpace>();		
 		
-		uiHandler = new Handler() {
+		handler = new Handler() {
     	    @Override
     	    public void handleMessage(Message msg) {
     	    	if(msg != null) {
@@ -205,23 +205,22 @@ public class ApiBridge {
 	}
 	
 	public void publishResult(String requestId, String response) {		
-		if(uiHandler != null) {
-			Message msgObj = uiHandler.obtainMessage();
+		if(handler != null) {
+			Message msgObj = handler.obtainMessage();
 	        Bundle b = new Bundle();
 	        b.putString(MSG_TYPE_ATTRIBUTE_NAME, MSG_CALL_JS);
 	        b.putString(MSG_TYPE_ATTRIBUTE_REQUEST_ID, requestId);
 	        b.putString(MSG_TYPE_ATTRIBUTE_JSON_PAYLOAD, response);
 	        msgObj.setData(b);
-	        uiHandler.sendMessage(msgObj);
+	        handler.sendMessage(msgObj);
 		}
 	}
 	
 	public void handleCallToJS(Bundle bundle) {
-		String sData = "";
 		try {
 			String callbackFunc = DEFAULT_JS_CONTROLLER_FNNAME;
-			sData = String.format("\"%s\"", URLEncoder.encode(bundle.getString(MSG_TYPE_ATTRIBUTE_JSON_PAYLOAD), "utf-8"));
-			String jsCode = String.format("%s('%s', %s)", callbackFunc
+			String sData = String.format("%s", URLEncoder.encode(bundle.getString(MSG_TYPE_ATTRIBUTE_JSON_PAYLOAD), "utf-8"));
+			String jsCode = String.format("%s('%s', '%s')", callbackFunc
 					, bundle.getString(MSG_TYPE_ATTRIBUTE_REQUEST_ID)
 					, sData);
 			executeJsCode(jsCode);
@@ -233,6 +232,7 @@ public class ApiBridge {
 	public void executeJsCode(String jsCode) {
 		if(this.webview != null && StringUtility.isPopulated(jsCode)) {
 			String sUrlToCall = String.format("javascript: %s", jsCode);
+			Logger.info(TAG, "ExecuteJSCode", sUrlToCall);
 			this.webview.loadUrl(sUrlToCall);
 		} else {
 			// No webview is attached
