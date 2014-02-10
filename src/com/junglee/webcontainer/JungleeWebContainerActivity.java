@@ -23,6 +23,7 @@ import com.example.jungleeclick.R;
 import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.commonlib.utils.UrlUtility;
 public class JungleeWebContainerActivity extends Activity {
 	private static final String TAG = "JungleeWebContainerActivity";
 	
@@ -138,7 +139,7 @@ public class JungleeWebContainerActivity extends Activity {
         	@Override
         	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
         		if(url != null && url.endsWith(wvLocalResourceSuffix)) {
-        			url = StringUtility.getPathfromUrl(url);
+        			url = UrlUtility.getPathfromUrl(url);
         			String filePath = StringUtility.chopFromEnd(url, wvLocalResourceSuffix.length());
         			try {
         				WebResourceResponse response = new WebResourceResponse(

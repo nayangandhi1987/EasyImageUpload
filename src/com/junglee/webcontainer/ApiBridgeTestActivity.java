@@ -32,6 +32,7 @@ import com.junglee.commonlib.eventengine.MnThreadEventHandler;
 import com.junglee.commonlib.location.LocationTracker;
 import com.junglee.commonlib.utils.LibraryGlobalStrings;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.commonlib.utils.UrlUtility;
 import com.junglee.commonlib.utils.ThreadUtility;
 import com.junglee.events.GlobalEventID;
 
@@ -70,7 +71,7 @@ public class ApiBridgeTestActivity extends Activity implements INameSpace {
         	@Override
         	public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
         		if(url != null && url.endsWith(wvLocalResourceSuffix)) {
-        			url = StringUtility.getPathfromUrl(url);
+        			url = UrlUtility.getPathfromUrl(url);
         			String filePath = StringUtility.chopFromEnd(url, wvLocalResourceSuffix.length());
         			try {
         				WebResourceResponse response = new WebResourceResponse(
