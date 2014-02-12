@@ -1,19 +1,19 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context="com.junglee.app.MainActivity" >
-    <item android:title="Search 2"
-        android:actionViewClass="android.widget.SearchView"
-        android:showAsAction="always"
-        android:icon="@android:drawable/ic_menu_search"
-        android:id="@+id/action_search"/>
-    <item android:title="Local Ad"
-        android:showAsAction="always"
-        android:id="@+id/action_local_ad"/>
+    tools:context="com.junglee.app.MainActivity" >   
+    
+    <!--item android:title="Local Ad"
+        android:id="@+id/action_local_ad"/>    
     <item android:title="FAQs"
-        android:showAsAction="always"
         android:id="@+id/action_faqs"/>
     <item android:title="Report Issue"
-        android:showAsAction="always"
-        android:id="@+id/action_report_issue"/>
+        android:id="@+id/action_report_issue"/-->
+        
+    <item android:title="Help"
+        android:id="@+id/action_help"/>    
+    <item android:title="Terms of Use"
+        android:id="@+id/action_terms"/>
+    <item android:title="Test API"
+        android:id="@+id/action_test_api"/>
 </menu>

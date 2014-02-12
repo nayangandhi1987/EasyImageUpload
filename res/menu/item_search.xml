@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:jungleeapp="http://schemas.android.com/apk/res-auto" xmlns:tools="http://schemas.android.com/tools">
+
+    <item
+        android:id="@+id/action_search"
+        android:icon="@drawable/actionbar_search"
+        android:title="Search"
+        jungleeapp:showAsAction="always|collapseActionView"
+        tools:ignore="HardcodedText"/>
+
+</menu>

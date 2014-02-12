@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.junglee.commonlib.logging.Logger;
+import com.junglee.commonlib.network.NetworkClient;
+import com.junglee.commonlib.network.NetworkMonitor;
 
 /**
  * AppStartup is the starting point for the app. All the initialization should happen here.
@@ -37,7 +39,9 @@ public class AppStartup {
 
 	public static void onEachLaunchPre(final Context c) {		
 		// these will run on each launch of the app
-		Logger.initLogger(2);
+		Logger.initLogger(0);
+		NetworkClient.getInstance().initialize(c);
+		NetworkMonitor.init(c);
 	}
 	public static void onEachLaunchPost(final Context c) {		
 		// these will run on each launch of the app

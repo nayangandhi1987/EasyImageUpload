@@ -6,6 +6,7 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+    
 
     <application
         android:allowBackup="true"
@@ -17,7 +18,7 @@
         <!-- Broadcast receivers -->
 
         <receiver
-            android:name="com.junglee.commonlib.NetworkClient"
+            android:name="com.junglee.commonlib.NetworkMonitor"
             android:enabled="true"
             android:priority="0" >
             <intent-filter>

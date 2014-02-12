@@ -34,13 +34,11 @@ public class VolleyResponseFetcher {
 
     public void fetchResponseAsync(NetworkRequest req, NetworkResponseListener responseListener)
     {
+    	this.req = req;
 		this.responseListener = responseListener;
 		this.id = req.getRequestId();
 		
-    	int reqMethod = 0; //GET
-    	if (req.getRequestMethod() == NetworkRequest.Method.POST) {
-    		reqMethod = 1; //POST
-    	}
+		int reqMethod = getVolleyRequestMethod(req);
     	
     	StringRequest request = new StringRequest(reqMethod, req.getRequestUrl(), new Response.Listener<String>() {
 		    @Override
@@ -84,6 +82,7 @@ public class VolleyResponseFetcher {
     }
     
     public NetworkResponse fetchResponseSync(NetworkRequest req) {
+    	this.req = req;
     	this.id = req.getRequestId();
     	
     	NetworkResponse response = new NetworkResponse();
@@ -91,10 +90,8 @@ public class VolleyResponseFetcher {
     	
     	RequestFuture<String> future = RequestFuture.newFuture();
     	
-    	int reqMethod = 0; //GET
-    	if (req.getRequestMethod() == NetworkRequest.Method.POST) {
-    		reqMethod = 1; //POST
-    	}
+    	int reqMethod = getVolleyRequestMethod(req);
+    	
     	StringRequest request = new StringRequest(reqMethod, req.getRequestUrl(), future, future) {
     		
     		@Override
@@ -150,6 +147,25 @@ public class VolleyResponseFetcher {
     	VolleyClient.getInstance().addToRequestQueue(request, id);
     }
     
+    private int getVolleyRequestMethod(NetworkRequest req) {
+    	if(req == null) {
+    		return -1;
+    	}
+    	
+    	int reqMethod = 0; //GET
+    	if (req.getRequestMethod() == NetworkRequest.Method.GET) {
+    		reqMethod = 0; //GET
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.POST) {
+    		reqMethod = 1; //POST
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.PUT) {
+    		reqMethod = 2; //PUT
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.DELETE) {
+    		reqMethod = 3; //DELETE
+    	}
+    	
+    	return reqMethod;
+    }
+    
     public boolean cancelRequest() {
     	VolleyClient.getInstance().cancelPendingRequests(id);
     	return true;
@@ -198,7 +214,8 @@ public class VolleyResponseFetcher {
         return params;
     };
     public byte[] getPostRequestBody() throws AuthFailureError {
-    	if (req.getRequestMethod() == NetworkRequest.Method.POST) {
+    	if (req.getRequestMethod() == NetworkRequest.Method.POST
+    			|| req.getRequestMethod() == NetworkRequest.Method.PUT) {
 			return req.getRequestData();
 		}
     	

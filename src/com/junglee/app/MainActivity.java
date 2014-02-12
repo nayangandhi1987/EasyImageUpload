@@ -2,24 +2,24 @@ package com.junglee.app;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.SearchManager;
-import android.app.SearchableInfo;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBar;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -27,20 +27,30 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SearchView;
 
 import com.example.jungleeclick.R;
 import com.helpshift.Helpshift;
+import com.junglee.commonlib.logging.Logger;
+import com.junglee.commonlib.network.NetworkApiTest;
+import com.junglee.commonlib.network.NetworkResponse;
+import com.junglee.commonlib.network.NetworkResponseListener;
 import com.junglee.commonlib.utils.StringUtility;
+import com.junglee.commonlib.utils.ThreadUtility;
+import com.junglee.utils.UIUtility;
 
 @SuppressLint("NewApi")
 public class MainActivity extends JungleeActionbarActivity
-        implements SearchView.OnQueryTextListener, NavigationDrawerFragment.NavigationDrawerCallbacks, httpCallBack {
+        implements SearchView.OnQueryTextListener, NavigationDrawerFragment.NavigationDrawerCallbacks, OnActionExpandListener
+        , httpCallBack {
 	
 	private static String IDENTIFIER = "MAIN_ACTIVITY";
 	private String UI_STATE = null;
@@ -61,14 +71,16 @@ public class MainActivity extends JungleeActionbarActivity
     private static final String SUGGESTION_URL = "http://completion.amazon.co.uk/search/complete?q=QQQ&method=completion&search-alias=aps&client=amazon-search-ui&mkt=44561&x=";
     private static final String SUBMIT_URL = "http://www.junglee.com/aw/search/junglee/ref=nav_sb_noss?url=search-alias%3Daps&field-keywords=";
     private ListView mListView;
+    private MenuItem mSearchItem;
     private SearchView mSearchView;
+    private EditText searchbox;
     private WebView webview1;
     private ArrayList<String> suggestionTexts;
     private ArrayList<String> suggestionLinks;
     private ArrayAdapter<String> adapter;
     private static final int MAX_SUGGESTIONS_TO_DISPLAY = 6;
     private boolean alreadyRunningWebCall = false;
-
+    
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -154,12 +166,12 @@ public class MainActivity extends JungleeActionbarActivity
         }
     }
 
-	public void restoreActionBar() {
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
-        actionBar.setDisplayShowTitleEnabled(true);
-        actionBar.setTitle(PlaceholderFragment.text);
-    }
+//	public void restoreActionBar() {
+//        ActionBar actionBar = getSupportActionBar();
+//        actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_STANDARD);
+//        actionBar.setDisplayShowTitleEnabled(true);
+//        actionBar.setTitle(PlaceholderFragment.text);
+//    }
 
     @Override
     public void onSuccess(String result) {
@@ -208,88 +220,179 @@ public class MainActivity extends JungleeActionbarActivity
         }
     }
 
-    private void setupSearchView(MenuItem searchItem) {
-
-        if (isAlwaysExpanded()) {
-            mSearchView.setIconifiedByDefault(false);
-        } else {
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM
-                    | MenuItem.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW);
-        }
-
-        SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
-        if (searchManager != null) {
-            List<SearchableInfo> searchables = searchManager
-                    .getSearchablesInGlobalSearch();
-
-            SearchableInfo info = searchManager
-                    .getSearchableInfo(getComponentName());
-            for (SearchableInfo inf : searchables) {
-                if (inf.getSuggestAuthority() != null
-                        && inf.getSuggestAuthority().startsWith("applications")) {
-                    info = inf;
-                }
-            }
-            mSearchView.setSearchableInfo(info);
-        }
-
-        mSearchView.setOnQueryTextListener(this);
-    }
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         if (!mNavigationDrawerFragment.isDrawerOpen()) {
-            // Only show items in the action bar relevant to this screen
-            // if the drawer is not showing. Otherwise, let the drawer
-            // decide what to show in the action bar.
-            getMenuInflater().inflate(R.menu.main, menu);
-
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
-            try{
-                SearchView sv = new SearchView(getBaseContext());
-                sv.setEnabled(true);
-                searchItem.setActionView(sv);
-                sv.setOnQueryTextListener(this);
-                mSearchView = sv;
-            }
-            catch (Exception exp)
-            {
-                //blah
-            }
-            restoreActionBar();
-            
             updateUiState("WITHOUT_NAV_DRAWER");
-            
-            return true;
         } else {
         	updateUiState("WITH_NAV_DRAWER");
-        	
-        	return super.onCreateOptionsMenu(menu);
-        }        
+        }
+    	
+		createSearchMenu(menu);
+		createLocationMenu(menu);
+		createAccountMenu(menu);
+		createOverflowMenu(menu);
+		return true;
     }
+    
+    private void createSearchMenu(Menu menu) {
+//		getMenuInflater().inflate(R.menu.item_search, menu);
+//    	
+//    	mSearchItem = menu.findItem(R.id.action_search);
+//    	mSearchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//    	    	
+//    	mSearchView = new SearchView(getBaseContext());
+//    	mSearchView.setEnabled(true);
+//    	mSearchView.setOnQueryTextListener(this);    	
+//    	mSearchView.setOnQueryTextFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View view, boolean queryTextFocused) {
+//                if(!queryTextFocused) {
+//                    mSearchView.setQuery("", false);
+//                    mSearchView.onActionViewCollapsed();
+//                }
+//            }
+//        });
+//    	mSearchItem.setActionView(mSearchView);
+    	
+    	getMenuInflater().inflate(R.menu.junglee_search, menu);
+    	mSearchItem = menu.findItem(R.id.junglee_search);
+    	MenuItemCompat.setOnActionExpandListener(mSearchItem, this);
+	}
+    private void createLocationMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.item_location, menu);
+    	
+    	MenuItem locationItem = menu.findItem(R.id.action_location);
+    	locationItem.setTitle("Change Location");
+    	locationItem.setTitleCondensed("Bangalore");
+    	locationItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	}
+    private void createAccountMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.item_account, menu);
+    	
+    	MenuItem accountItem = menu.findItem(R.id.action_account);
+    	accountItem.setTitle("Sign Out");
+    	accountItem.setTitleCondensed("Nayan");
+    	accountItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+	}
+    private void createOverflowMenu(Menu menu) {
+    	getMenuInflater().inflate(R.menu.main, menu);
+    	
+//    	MenuItem localAdItem = menu.findItem(R.id.action_local_ad);
+//    	localAdItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+//    	
+//    	MenuItem faqsItem = menu.findItem(R.id.action_faqs);
+//    	faqsItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+//    	
+//    	MenuItem reportIssueItem = menu.findItem(R.id.action_report_issue);
+//    	reportIssueItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+    	
+    	MenuItem helpItem = menu.findItem(R.id.action_help);
+    	helpItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+    	MenuItem termsItem = menu.findItem(R.id.action_terms);
+    	termsItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+    	MenuItem testItem = menu.findItem(R.id.action_test_api);
+    	testItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+	}
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        //int id = item.getItemId();
-
-        //item.setActionView(R.id.text_test);
     	
     	int id =  item.getItemId();
-    	if(id == R.id.action_local_ad) {
-    		Intent i = new Intent(getApplicationContext(), JungleeClickActivity.class);
-        	startActivity(i);
-    	} else if(id == R.id.action_faqs) {
-    		Helpshift.showFAQs(this);
-    	} else if(id == R.id.action_report_issue) {
-    		Helpshift.showConversation(this);
+    	if(id == R.id.junglee_search) {
+    		MenuItemCompat.setActionView(item, R.layout.actionbar_search);
+    		
+			searchbox = (EditText) MenuItemCompat.getActionView(item)
+					.findViewById(R.id.menu_search_field);
+			searchbox.setHint("Type to search...");
+			searchbox.setImeOptions(EditorInfo.IME_ACTION_SEARCH);
+			searchbox.setTextColor(Color.BLACK);
+			searchbox.setHintTextColor(Color.GRAY);
+			
+			MenuItemCompat.expandActionView(mSearchItem);
+    	} else if(id == R.id.action_location) {
+    		UIUtility.showToastMsgShort(this, "Change Location Clicked!");
+    	} else if(id == R.id.action_account) {
+    		UIUtility.errorBox(this
+    				, "Sign Out"
+    				, "Are you sure you want to sign out of your account?"
+    				, new DialogInterface.OnClickListener() {
+		    			@Override
+		    			public void onClick(DialogInterface dialog, int which) {
+		    				UIUtility.showToastMsgShort(MainActivity.this, "Requested sign Out!");
+		    			}
+		    		}
+		    		, new DialogInterface.OnClickListener() {
+		    			@Override
+		    			public void onClick(DialogInterface dialog, int which) {
+		    				UIUtility.showToastMsgShort(MainActivity.this, "Cancelled sign Out!");
+		    			}
+		    		});
+    	} else if(id == R.id.action_help) {
+    		
+    	} else if(id == R.id.action_terms) {
+    		
+    	} else if(id == R.id.action_test_api) {
+    		/*
+    		int TEST_GET_SYNC = 1;
+    		int TEST_GET_ASYNC = 2;
+    		int TEST_POST_SYNC = 3;
+    		int TEST_POST_ASYNC = 4;    		
+    		int TEST_PUT_SYNC = 5;
+    		int TEST_PUT_ASYNC = 6;
+    		int TEST_DELETE_SYNC = 7;
+    		int TEST_DELETE_ASYNC = 8;
+    		
+    		int testApi = TEST_DELETE_ASYNC;
+    		
+    		if(testApi == TEST_GET_SYNC) {
+    			NetworkApiTest.testParseGetRequestSync();  			
+    		} else if(testApi == TEST_GET_ASYNC) {
+    			NetworkApiTest.testParseGetRequestAsync();
+    		} else if(testApi == TEST_POST_SYNC) {
+    			NetworkApiTest.testParsePostRequestSync();    			
+    		} else if(testApi == TEST_POST_ASYNC) {
+    			NetworkApiTest.testParsePostRequestAsync();
+    		} else if(testApi == TEST_PUT_SYNC) {
+    			NetworkApiTest.testParsePutRequestSync();
+    		} else if(testApi == TEST_PUT_ASYNC) {
+    			NetworkApiTest.testParsePutRequestAsync();
+    		} else if(testApi == TEST_DELETE_SYNC) {
+    			NetworkApiTest.testParseDeleteRequestSync();
+    		} else if(testApi == TEST_DELETE_ASYNC) {
+    			NetworkApiTest.testParseDeleteRequestAsync();
+    		}
+    		*/
+    		UIUtility.showToastMsgShort(this, "Unused!");
     	}
+    	
+//    	else if(id == R.id.action_local_ad) {
+//    		Intent i = new Intent(getApplicationContext(), JungleeClickActivity.class);
+//    		startActivity(i);
+//    	} 
+//    	else if(id == R.id.action_faqs) {
+//    		Helpshift.showFAQs(this);
+//    	} 
+//    	else if(id == R.id.action_report_issue) {
+//    		Helpshift.showConversation(this);
+//    	}
 
         return super.onOptionsItemSelected(item);
     }
+    
+//    This won't work if mSearchView is added in code!
+//    @Override
+//    public void onBackPressed() {
+//        if (mSearchView.isShown()) {
+//        	collapseSearchView();
+//        } else{
+//            super.onBackPressed();
+//        }
+//    }
+//    private void collapseSearchView() {
+//    	mSearchView.setQuery("", false);
+//    	mSearchView.onActionViewCollapsed();
+//    }
 
     protected boolean isAlwaysExpanded() {
         return false;
@@ -354,8 +457,8 @@ public class MainActivity extends JungleeActionbarActivity
         @Override
         public void onPrepareOptionsMenu(Menu menu) {
             super.onPrepareOptionsMenu(menu);
-            MenuItem searchItem = menu.findItem(R.id.action_search);
-            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
+//            MenuItem searchItem = menu.findItem(R.id.action_search);
+//            searchItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS);
         }
 
         /**
@@ -426,5 +529,26 @@ public class MainActivity extends JungleeActionbarActivity
                     getArguments().getInt(ARG_SECTION_NUMBER));
         }
     }
+
+	@Override
+	public boolean onMenuItemActionExpand(MenuItem item) {
+		searchbox.post(new Runnable() {
+			@Override
+			public void run() {
+				searchbox.requestFocus();
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.showSoftInput(searchbox, 0);
+			}
+		});
+		return true;
+	}
+
+	@Override
+	public boolean onMenuItemActionCollapse(MenuItem item) {	
+		searchbox.setText("");
+		InputMethodManager inputManager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+		inputManager.hideSoftInputFromWindow(searchbox.getWindowToken(), 0);
+		return true;
+	}
 
 }

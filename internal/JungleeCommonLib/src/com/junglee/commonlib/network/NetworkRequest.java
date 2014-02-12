@@ -15,6 +15,11 @@ public class NetworkRequest {
 	public NetworkRequest(String requestUrl) {
 		initRequest(requestUrl, Method.GET, null);
 	}
+	public NetworkRequest(String requestUrl, Method requestMethod) {
+		initRequest(requestUrl, 
+				requestMethod, 
+				null);
+	}
 	
 	public NetworkRequest(String requestUrl, Method requestMethod, byte[] requestData) {
 		initRequest(requestUrl, 

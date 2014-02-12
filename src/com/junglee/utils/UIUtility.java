@@ -1,10 +1,15 @@
 package com.junglee.utils;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.app.AlertDialog.Builder;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Rect;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.junglee.commonlib.logging.Logger;
@@ -44,6 +49,54 @@ public class UIUtility {
 	public static void showToastMsgLong(Activity activity, String msg) {
 		Toast.makeText(activity, msg, Toast.LENGTH_LONG).show();
 	}
+	
+	public static void errorBox(Context c, String title, String mymessage) {
+        errorBox(c, title, mymessage, null, null);
+    }
+
+    public static void errorBox(Context c, String title, String mymessage,
+            DialogInterface.OnClickListener positiveButtonListener) {
+        errorBox(c, title, mymessage, positiveButtonListener, null);
+    }
+
+    public static void errorBox(Context c, String title, String mymessage,
+            DialogInterface.OnClickListener positiveButtonListener,
+            DialogInterface.OnClickListener negativeButtonListener) {
+        errorBox(c, title, mymessage, positiveButtonListener, c.getResources().getString(android.R.string.ok),
+                negativeButtonListener, c.getResources().getString(android.R.string.cancel));
+    }
+    
+    public static void errorBox(Context c, String title, String mymessage,
+            DialogInterface.OnClickListener positiveButtonListener, String positiveButtonText,
+            DialogInterface.OnClickListener negativeButtonListener, String negativeButtonText) {
+    	try	{
+	        Builder alert = new AlertDialog.Builder(c)
+	                .setMessage(mymessage)
+	                .setIcon(android.R.drawable.ic_dialog_alert)
+	                .setTitle(title)
+	                .setCancelable(true)
+	                .setPositiveButton(
+	                        positiveButtonText != null ? positiveButtonText : c.getResources().getString(android.R.string.ok),
+	                        positiveButtonListener != null ? positiveButtonListener
+	                                : new DialogInterface.OnClickListener()
+	                                {
+	                                    public void onClick(DialogInterface dialog,
+	                                            int whichButton)
+	                                    {
+	                                    }
+	                                });
+	        if (negativeButtonListener != null) {
+	            alert.setNegativeButton(negativeButtonText != null ? negativeButtonText : c.getResources().getString(android.R.string.cancel),
+	                    negativeButtonListener);
+	        }
+	
+	        alert.show();
+    	} catch (WindowManager.BadTokenException e) {
+    		// This occurs when the activity for which the dialog needs to be displayed
+			// is stopped or destroyed before the dialog is displayed. We don't need to 
+			// do anything specific in this case.
+    	}
+    }
 	
 	public static int getActionbarHeight(Activity activity) {
 		if(ACTION_BAR_HEIGHT > 0) return ACTION_BAR_HEIGHT;

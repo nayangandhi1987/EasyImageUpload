@@ -12,6 +12,16 @@ import com.junglee.commonlib.eventengine.EventEngine;
 import com.junglee.commonlib.logging.Logger;
 import com.junglee.commonlib.utils.LibraryGlobalConstants;
 
+
+/**
+ * Make sure that the app using this class has requested the following permission:
+ * <uses-permission android:name="android.permission.INTERNET" />    
+ * <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+ * <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+ * 
+ * @author nggandhi
+ *
+ */
 public class NetworkMonitor extends BroadcastReceiver {
 	private static Context applicationContext = null;
 	private static boolean isNetworkAvailable = false;
@@ -25,10 +35,7 @@ public class NetworkMonitor extends BroadcastReceiver {
 		checkNetworkConnectivity(applicationContext);
 	}
 
-	public static boolean isNetworkAvailable(Context context) {
-		Context c = (context!=null)?context:applicationContext;
-		checkNetworkConnectivity(c);
-
+	public static boolean isNetworkAvailable() {
 		return isNetworkAvailable;
 	}
 	
@@ -81,7 +88,7 @@ public class NetworkMonitor extends BroadcastReceiver {
 
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Logger.info(TAG, "Broadcast Received --- Context is " + context + "   Intent is " + intent);
+		Logger.info(TAG, "Broadcast Received --- CONNECTIVITY_CHANGE");
 		checkNetworkConnectivity(context);
 	}
 

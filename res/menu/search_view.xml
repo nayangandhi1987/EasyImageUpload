@@ -4,6 +4,5 @@
 
     <item android:title="text test"
         android:id="@+id/text_test"
-        android:actionViewClass="android.widget.TextView"
-        />
+        android:actionViewClass="android.widget.TextView" />
 </menu>

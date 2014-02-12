@@ -1,5 +1,7 @@
 package com.junglee.commonlib.network;
 
+import java.util.Arrays;
+
 import org.json.JSONObject;
 
 import com.junglee.commonlib.utils.StringUtility;
@@ -102,6 +104,18 @@ public class NetworkResponse {
 		}
 		
 		return !failure;
+	}
+	
+	
+	
+	@Override
+	public String toString() {
+		return "NetworkResponse [statusCode=" + statusCode + ", requestFailed="
+				+ requestFailed + ", errorCode=" + errorCode + ", errorMsg="
+				+ errorMsg + ", isTimedOut=" + isTimedOut + ", responseType="
+				+ responseType + ", byteArrayResponse="
+				+ Arrays.toString(byteArrayResponse) + ", stringResponse="
+				+ stringResponse + ", jsonResponse=" + jsonResponse + "]";
 	}
 	
 	
