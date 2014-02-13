@@ -12,6 +12,15 @@ import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.AsyncHttpResponseHandler;
 import com.loopj.android.http.RequestParams;
 
+/**
+ * AsyncHttpClientFileUploader provides support for file uploads asynchronously.
+ * <p> 
+ * AsyncHttpClientFileUploader uses android-async-http library to provide support for file uploads, and makes callbacks 
+ * on start/finish, success/failure, and progress, etc. The requests which are in progress can be cancelled.
+ * 
+ * @author      Nayan Gandhi <nggandhi@amazon.com>
+ * @since       1.0
+ */
 public class AsyncHttpClientFileUploader {
 	private static final String TAG = "AsyncHttpClientFileUploader";
 	
@@ -19,11 +28,19 @@ public class AsyncHttpClientFileUploader {
 	private FileUploadRequest uploadRequest = null;
 	private FileTransferResponseListener transferListener = null;
 	
+	/**
+	 * The constructor that internally creates an instance of AsyncHttpClient to be used later.
+	 */
 	public AsyncHttpClientFileUploader() {
 		client = new AsyncHttpClient();
 	}
 	
 	
+	/**
+	 * It starts the file upload. The listener will get all callbacks on start/finish, success/failure, and progress, etc.
+	 * @param request the file upload request object.
+	 * @param listener the listener that will handle the progress.
+	 */
 	public void uploadFile(FileUploadRequest request, FileTransferResponseListener listener) {
 		uploadRequest = request;
 		transferListener = listener;
@@ -94,10 +111,23 @@ public class AsyncHttpClientFileUploader {
 		});
     }
 	
+	/**
+	 * Cancels the request if it is in progress, else does nothing.
+	 */
 	public void cancel() {
-		client.cancelRequests(uploadRequest.getContext(), true);
+		if(uploadRequest != null) {
+			client.cancelRequests(uploadRequest.getContext(), true);
+			NetworkClient.getInstance().onUploadFinished(uploadRequest.getRequestId(), false);
+		}
 	}
 	
+	/**
+	 * It actually does the file upload using the POST request.
+	 * @param c the context from which the request is initiated.
+	 * @param url the url to be hit to do the file upload.
+	 * @param params the request param containing the file attribute => the File object
+	 * @param responseHandler the handler that will handle the updates on start/finish, success/failure, and progres, etc.
+	 */
 	private void doUpload(Context c, String url, RequestParams params, AsyncHttpResponseHandler responseHandler) {
 		client.post(c, url, params, responseHandler);
 	}

@@ -32,6 +32,13 @@ public class VolleyResponseFetcher {
 	private int 						DEFAULT_SOCK_TIMEOUT = 30*1000;
 	
 
+	/**
+     * It makes an asynchronous network request using Volley, and  the response obtained as a result of that request is 
+     * communicated back to the listener through the callback.
+     * @param req the network request object.
+     * @param responseListener the response listener that would handle the response callback.
+     * @return the network response.
+     */
     public void fetchResponseAsync(NetworkRequest req, NetworkResponseListener responseListener)
     {
     	this.req = req;
@@ -81,6 +88,11 @@ public class VolleyResponseFetcher {
 		sendVolleyRequest(request, req.getTimeouts());        
     }
     
+    /**
+     * It makes a synchronous network request using Volley and returns the response obtained as a result of that request.
+     * @param req the network request object.
+     * @return the network response.
+     */
     public NetworkResponse fetchResponseSync(NetworkRequest req) {
     	this.req = req;
     	this.id = req.getRequestId();
@@ -128,6 +140,12 @@ public class VolleyResponseFetcher {
     	return response;
     }
     
+    /**
+     * This is used to actually fire off a Volley request through the VolleyClient. It also specifies the timeout and 
+     * retry policy before firing off the request.
+     * @param request
+     * @param timeouts
+     */
     private void sendVolleyRequest(StringRequest request, Pair<Integer, Integer> timeouts) {
     	Pair<Integer, Integer> reqTimeouts = timeouts;
 		int connTimeout = reqTimeouts.first;
@@ -147,30 +165,19 @@ public class VolleyResponseFetcher {
     	VolleyClient.getInstance().addToRequestQueue(request, id);
     }
     
-    private int getVolleyRequestMethod(NetworkRequest req) {
-    	if(req == null) {
-    		return -1;
-    	}
-    	
-    	int reqMethod = 0; //GET
-    	if (req.getRequestMethod() == NetworkRequest.Method.GET) {
-    		reqMethod = 0; //GET
-    	} else if (req.getRequestMethod() == NetworkRequest.Method.POST) {
-    		reqMethod = 1; //POST
-    	} else if (req.getRequestMethod() == NetworkRequest.Method.PUT) {
-    		reqMethod = 2; //PUT
-    	} else if (req.getRequestMethod() == NetworkRequest.Method.DELETE) {
-    		reqMethod = 3; //DELETE
-    	}
-    	
-    	return reqMethod;
-    }
-    
+    /**
+     * It can be used to cancel a request that is in progress.
+     * @return true on success, else false.
+     */
     public boolean cancelRequest() {
     	VolleyClient.getInstance().cancelPendingRequests(id);
+    	NetworkClient.getInstance().onRequestCompleted(id, false);
     	return true;
     }
     
+    /**
+     * This gets called when the request execution succeeds. The callback is made along with the successful response.
+     */
     private void requestCompleted() {
     	if(responseListener != null) {
     		NetworkResponse resp = new NetworkResponse();
@@ -180,6 +187,9 @@ public class VolleyResponseFetcher {
     	
     	NetworkClient.getInstance().onRequestCompleted(id, true);
     }
+    /**
+     * This gets called when the request execution fails. The callback is made along with the failure response.
+     */
     private void requestFailed() {
     	if(responseListener != null) {
     		NetworkResponse resp = new NetworkResponse();
@@ -191,6 +201,12 @@ public class VolleyResponseFetcher {
     	NetworkClient.getInstance().onRequestCompleted(id, false);
     }
     
+    /**
+     * Gets the request headers. This includes the headers that were explicitly specified for a request, as well as the 
+     * default headers that are needed for every request.
+     * @return the request headers to be sent with the request being executed.
+     * @throws AuthFailureError
+     */
     public Map<String, String> getRequestHeaders() throws AuthFailureError {
     	String userAgent = LibraryGlobalConstants.APP_USER_AGENT;
     	
@@ -212,13 +228,45 @@ public class VolleyResponseFetcher {
         	}
         }
         return params;
-    };
-    public byte[] getPostRequestBody() throws AuthFailureError {
+    }
+    
+    
+    
+    /**
+     * Gets the request body as a byte array for a POST/PUT request types.
+     * @return the request body data for a POST/PUt request, otherwise null.
+     * @throws AuthFailureError
+     */
+    private byte[] getPostRequestBody() throws AuthFailureError {
     	if (req.getRequestMethod() == NetworkRequest.Method.POST
     			|| req.getRequestMethod() == NetworkRequest.Method.PUT) {
 			return req.getRequestData();
 		}
     	
         return null;
+    }
+    
+    /**
+     * Gets the Volley's request method value corresponding to the NetworkRequest object's requestMethod field.
+     * @param req
+     * @return
+     */
+    private int getVolleyRequestMethod(NetworkRequest req) {
+    	if(req == null) {
+    		return -1;
+    	}
+    	
+    	int reqMethod = 0; //GET
+    	if (req.getRequestMethod() == NetworkRequest.Method.GET) {
+    		reqMethod = 0; //GET
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.POST) {
+    		reqMethod = 1; //POST
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.PUT) {
+    		reqMethod = 2; //PUT
+    	} else if (req.getRequestMethod() == NetworkRequest.Method.DELETE) {
+    		reqMethod = 3; //DELETE
+    	}
+    	
+    	return reqMethod;
     }
 }
